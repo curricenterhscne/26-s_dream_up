@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>2026 여름방학 꿈키움 수강신청</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;900&family=Noto+Serif+KR:wght@600;700&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy:#152460;--blue:#2952d9;--sky:#e9effe;--gold:#e8970f;
+  --mint:#0f9e7b;--mint-bg:#d6f5ee;--red:#dc2626;--red-bg:#fef2f2;
+  --white:#fff;--g50:#f7f8fc;--g100:#eef0f8;--g200:#dde1f0;
+  --g400:#8892b0;--g700:#3c4a6b;--text:#111827;
+  --r:14px;--sh:0 2px 16px rgba(21,36,96,.08);--sh2:0 8px 36px rgba(21,36,96,.18);
+}
+html{scroll-behavior:smooth}
+body{font-family:'Noto Sans KR',sans-serif;background:var(--g50);color:var(--text);line-height:1.6}
+
+/* ── 히어로 ── */
+.hero{background:linear-gradient(135deg,#0d1940 0%,var(--navy) 45%,#1e3d9e 100%);
+  padding:56px 24px 40px;text-align:center;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse at 20% 60%,rgba(41,82,217,.25) 0%,transparent 55%),
+             radial-gradient(ellipse at 80% 20%,rgba(232,151,15,.12) 0%,transparent 50%)}
+.hero-in{position:relative;z-index:1;max-width:820px;margin:0 auto}
+.hero-badge{display:inline-block;background:var(--gold);color:var(--navy);
+  font-size:11px;font-weight:800;padding:4px 14px;border-radius:20px;letter-spacing:.8px;margin-bottom:16px}
+.hero h1{font-family:'Noto Serif KR',serif;font-size:clamp(20px,4vw,32px);
+  font-weight:700;color:#fff;margin-bottom:10px;line-height:1.4}
+.hero p{color:rgba(255,255,255,.7);font-size:13px;line-height:1.9;margin-bottom:20px}
+
+/* ── 카운트다운 배너 ── */
+#countdown-banner{background:rgba(0,0,0,.35);backdrop-filter:blur(6px);
+  border:1px solid rgba(255,255,255,.15);border-radius:16px;
+  padding:18px 24px;margin:0 auto 8px;max-width:500px;display:none}
+#countdown-banner.visible{display:block}
+.cd-label{font-size:11px;color:rgba(255,255,255,.6);letter-spacing:.5px;margin-bottom:6px}
+.cd-digits{display:flex;gap:8px;justify-content:center;align-items:center;flex-wrap:wrap}
+.cd-unit{text-align:center}
+.cd-num{font-size:32px;font-weight:900;color:var(--gold);line-height:1;
+  font-variant-numeric:tabular-nums;font-family:'Noto Sans KR',sans-serif}
+.cd-sub{font-size:10px;color:rgba(255,255,255,.5)}
+.cd-sep{font-size:24px;font-weight:900;color:rgba(255,255,255,.3);margin-top:-4px}
+
+/* ── 오픈 후 상태 배지 ── */
+#open-badge{display:none;background:var(--mint);color:#fff;
+  border-radius:24px;padding:8px 20px;font-size:13px;font-weight:700;
+  display:inline-flex;align-items:center;gap:6px;margin-bottom:12px}
+#open-badge.visible{display:inline-flex}
+.pulse-dot{width:8px;height:8px;border-radius:50%;background:#fff;
+  animation:pulse 1.2s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.7)}}
+
+/* ── 탭 네비 ── */
+.tabs{background:#fff;border-bottom:1px solid var(--g200);position:sticky;top:0;z-index:200;
+  box-shadow:0 2px 10px rgba(0,0,0,.06)}
+.tabs-inner{max-width:900px;margin:0 auto;display:flex;padding:0 16px}
+.tab-btn{padding:14px 20px;font:600 13px 'Noto Sans KR',sans-serif;border:none;
+  background:none;cursor:pointer;color:var(--g400);border-bottom:3px solid transparent;
+  transition:color .18s,border-color .18s;white-space:nowrap}
+.tab-btn.on{color:var(--navy);border-bottom-color:var(--blue)}
+.tab-btn:hover{color:var(--navy)}
+
+/* ── 메인 레이아웃 ── */
+.main{max-width:900px;margin:0 auto;padding:22px 16px}
+.section{display:none}
+.section.active{display:block}
+
+/* ── 강좌 목록 ── */
+.list-header{display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:14px;flex-wrap:wrap;gap:8px}
+.list-title{font:700 16px 'Noto Serif KR',serif;color:var(--navy)}
+.poll-status{font-size:11px;color:var(--g400)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px}
+.card{background:#fff;border-radius:var(--r);border:1px solid var(--g200);
+  box-shadow:var(--sh);overflow:hidden;display:flex;flex-direction:column;
+  transition:transform .2s,box-shadow .2s,border-color .2s}
+.card:hover{transform:translateY(-3px);box-shadow:var(--sh2);border-color:var(--blue)}
+.card.full{opacity:.7}
+.card.not-reg{opacity:.65}
+
+.ch{padding:14px 16px 10px;position:relative;overflow:hidden}
+.ch::after{content:'';position:absolute;right:-20px;top:-20px;width:80px;height:80px;
+  border-radius:50%;background:rgba(255,255,255,.07);pointer-events:none}
+.ccode{display:inline-block;background:rgba(255,255,255,.2);color:rgba(255,255,255,.9);
+  font-size:10px;font-weight:700;padding:2px 7px;border-radius:8px;letter-spacing:.4px;
+  font-family:monospace;margin-bottom:5px}
+.cinst{font-size:11px;color:rgba(255,255,255,.6);margin-bottom:2px}
+.cname{font-size:13px;font-weight:700;color:#fff;line-height:1.4}
+
+.cb{padding:12px 14px;flex:1;display:flex;flex-direction:column;gap:10px}
+.seat-row{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.seat-badge{font-size:12px;font-weight:700;padding:4px 10px;border-radius:20px}
+.seat-badge.ok{background:var(--sky);color:var(--navy)}
+.seat-badge.warn{background:#fef3c7;color:#92400e}
+.seat-badge.full{background:var(--g100);color:var(--g400)}
+.seat-badge.special{background:var(--mint-bg);color:#065f46}
+
+.seat-bar-wrap{height:5px;background:var(--g100);border-radius:3px;flex:1}
+.seat-bar{height:5px;border-radius:3px;transition:width .4s;background:var(--blue)}
+.seat-bar.warn{background:var(--gold)}
+.seat-bar.full{background:var(--g400)}
+
+.apply-btn{width:100%;padding:9px;border-radius:10px;border:none;cursor:pointer;
+  font:600 13px 'Noto Sans KR',sans-serif;transition:all .18s}
+.apply-btn.can{background:var(--blue);color:#fff}
+.apply-btn.can:hover{background:#1e3db5}
+.apply-btn.dis{background:var(--g100);color:var(--g400);cursor:not-allowed}
+.apply-btn.loading{opacity:.6;cursor:wait}
+.apply-btn.special{background:var(--mint-bg);color:#065f46;cursor:default;font-size:12px}
+
+/* ── 모달 ── */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:500;
+  display:none;align-items:center;justify-content:center;padding:16px}
+.modal-overlay.open{display:flex}
+.modal{background:#fff;border-radius:20px;padding:28px 24px;max-width:440px;width:100%;
+  box-shadow:0 20px 60px rgba(0,0,0,.2);max-height:90vh;overflow-y:auto}
+.modal h2{font:700 17px 'Noto Serif KR',serif;color:var(--navy);margin-bottom:4px}
+.modal-sub{font-size:12px;color:var(--g400);margin-bottom:20px}
+.modal-course{background:var(--sky);border-radius:10px;padding:10px 14px;
+  font-size:12px;color:var(--navy);margin-bottom:18px;font-weight:500}
+
+.form-group{margin-bottom:14px}
+.form-group label{display:block;font-size:12px;font-weight:700;color:var(--g700);margin-bottom:5px}
+.form-group input{width:100%;padding:10px 13px;border:1.5px solid var(--g200);
+  border-radius:10px;font:14px 'Noto Sans KR',sans-serif;outline:none;
+  transition:border-color .2s,box-shadow .2s}
+.form-group input:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(41,82,217,.1)}
+.phone-notice{background:#fef9e7;border:1px solid #fde68a;border-radius:10px;
+  padding:10px 13px;font-size:12px;color:#92400e;margin-bottom:18px;line-height:1.6}
+.phone-notice strong{font-weight:700}
+
+.modal-btns{display:flex;gap:8px}
+.btn-cancel{flex:1;padding:11px;border-radius:10px;border:1.5px solid var(--g200);
+  background:#fff;color:var(--g700);font:600 13px 'Noto Sans KR',sans-serif;cursor:pointer;
+  transition:all .18s}
+.btn-cancel:hover{background:var(--g100)}
+.btn-submit{flex:2;padding:11px;border-radius:10px;border:none;
+  background:var(--blue);color:#fff;font:700 13px 'Noto Sans KR',sans-serif;cursor:pointer;
+  transition:all .18s}
+.btn-submit:hover{background:#1e3db5}
+.btn-submit:disabled{background:var(--g200);color:var(--g400);cursor:not-allowed}
+
+/* ── 내 신청 확인 ── */
+.my-wrap{max-width:480px;margin:0 auto}
+.my-card{background:#fff;border-radius:16px;border:1px solid var(--g200);
+  box-shadow:var(--sh);padding:24px;margin-top:16px}
+.my-card h3{font:700 15px 'Noto Serif KR',serif;color:var(--navy);margin-bottom:14px}
+.my-info-row{display:flex;justify-content:space-between;align-items:center;
+  padding:8px 0;border-bottom:1px solid var(--g100);font-size:13px}
+.my-info-row:last-of-type{border-bottom:none}
+.my-info-label{color:var(--g400);font-size:12px}
+.my-info-val{font-weight:600;color:var(--navy)}
+.btn-mycancel{width:100%;margin-top:16px;padding:11px;border-radius:10px;
+  border:1.5px solid var(--red);background:#fff;color:var(--red);
+  font:700 13px 'Noto Sans KR',sans-serif;cursor:pointer;transition:all .18s}
+.btn-mycancel:hover{background:var(--red-bg)}
+
+/* ── 토스트 ── */
+#toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);
+  background:var(--navy);color:#fff;padding:12px 22px;border-radius:30px;
+  font-size:13px;font-weight:600;z-index:900;transition:transform .3s ease;
+  pointer-events:none;white-space:nowrap;max-width:90vw;text-align:center}
+#toast.show{transform:translateX(-50%) translateY(0)}
+#toast.ok{background:var(--mint)}
+#toast.err{background:var(--red)}
+
+/* ── 로딩 스피너 ── */
+.spinner{display:inline-block;width:14px;height:14px;border:2px solid rgba(255,255,255,.3);
+  border-top-color:#fff;border-radius:50%;animation:spin .6s linear infinite;vertical-align:middle}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ── 검색/필터 바 ── */
+.filter-bar{background:#fff;border-bottom:1px solid var(--g200);padding:10px 16px}
+.filter-inner{max-width:900px;margin:0 auto;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.search-wrap{flex:1;min-width:140px;position:relative}
+.search-wrap input{width:100%;padding:8px 13px 8px 36px;border:1.5px solid var(--g200);
+  border-radius:10px;font:13px 'Noto Sans KR',sans-serif;outline:none;
+  transition:border-color .2s}
+.search-wrap input:focus{border-color:var(--blue)}
+.si{position:absolute;left:11px;top:50%;transform:translateY(-50%);color:var(--g400);font-size:14px}
+.fsel{padding:7px 10px;border:1.5px solid var(--g200);border-radius:10px;
+  font:13px 'Noto Sans KR',sans-serif;outline:none;cursor:pointer;background:#fff;
+  transition:border-color .2s}
+.fsel:focus{border-color:var(--blue)}
+.rc{font-size:12px;color:var(--g400);white-space:nowrap}
+
+/* ── 반응형 ── */
+@media(max-width:480px){
+  .tabs-inner{padding:0 4px}
+  .tab-btn{padding:12px 12px;font-size:12px}
+  .modal{border-radius:16px}
+}
+</style>
+</head>
+<body>
+
+<!-- ── 히어로 ── -->
+<div class="hero">
+  <div class="hero-in">
+    <span class="hero-badge">2026 여름방학</span>
+    <h1>꿈키움 학교 밖 교육<br>수강신청</h1>
+    <p>충남 대학·기관 연계 창의적체험활동 강좌<br>88개 강좌 · 전 강좌 정원 15명 · 선착순 접수</p>
+
+    <!-- 카운트다운 (오픈 전) -->
+    <div id="countdown-banner">
+      <div class="cd-label">수강신청 오픈까지</div>
+      <div class="cd-digits">
+        <div class="cd-unit"><div class="cd-num" id="cd-d">--</div><div class="cd-sub">일</div></div>
+        <div class="cd-sep">:</div>
+        <div class="cd-unit"><div class="cd-num" id="cd-h">--</div><div class="cd-sub">시간</div></div>
+        <div class="cd-sep">:</div>
+        <div class="cd-unit"><div class="cd-num" id="cd-m">--</div><div class="cd-sub">분</div></div>
+        <div class="cd-sep">:</div>
+        <div class="cd-unit"><div class="cd-num" id="cd-s">--</div><div class="cd-sub">초</div></div>
+      </div>
+      <div style="margin-top:10px;font-size:11px;color:rgba(255,255,255,.5)">
+        오픈 시각: 2026년 6월 25일(목) 오후 6시 정각 (서버 시각 기준)
+      </div>
+    </div>
+
+    <!-- 오픈 후 배지 -->
+    <div id="open-badge"><span class="pulse-dot"></span> 수강신청 진행 중</div>
+  </div>
+</div>
+
+<!-- ── 탭 네비 ── -->
+<div class="tabs">
+  <div class="tabs-inner">
+    <button class="tab-btn on" data-tab="list">강좌 목록</button>
+    <button class="tab-btn" data-tab="my">내 신청 확인/취소</button>
+  </div>
+</div>
+
+<!-- ── 필터 바 (강좌 목록 탭에만) ── -->
+<div class="filter-bar" id="filter-bar">
+  <div class="filter-inner">
+    <div class="search-wrap">
+      <span class="si">🔍</span>
+      <input type="text" id="search-input" placeholder="강좌명·기관·지역 검색">
+    </div>
+    <select class="fsel" id="region-filter">
+      <option value="">지역 전체</option>
+    </select>
+    <span class="rc" id="result-count"></span>
+  </div>
+</div>
+
+<!-- ── 메인 콘텐츠 ── -->
+<div class="main">
+
+  <!-- 강좌 목록 -->
+  <div class="section active" id="tab-list">
+    <div class="list-header">
+      <div class="list-title">강좌 목록</div>
+      <div class="poll-status" id="poll-status">로딩 중...</div>
+    </div>
+    <div class="grid" id="course-grid">
+      <!-- 카드 JS 생성 -->
+    </div>
+  </div>
+
+  <!-- 내 신청 확인/취소 -->
+  <div class="section" id="tab-my">
+    <div class="my-wrap">
+      <div class="my-card">
+        <h3>내 신청 확인</h3>
+        <div style="margin-bottom:14px;font-size:12px;color:var(--g400)">
+          학교·학번·휴대폰을 입력하면 신청 내역을 확인할 수 있습니다.
+        </div>
+        <div class="form-group">
+          <label>학교명</label>
+          <input type="text" id="my-school" placeholder="예: OO고등학교">
+        </div>
+        <div class="form-group">
+          <label>학번</label>
+          <input type="text" id="my-stno" placeholder="예: 20261001">
+        </div>
+        <div class="form-group">
+          <label>휴대폰 번호</label>
+          <input type="tel" id="my-phone" placeholder="010-0000-0000">
+        </div>
+        <button class="btn-submit" id="my-check-btn" style="width:100%;margin-top:4px" onclick="checkMyEnrollment()">조회</button>
+      </div>
+
+      <div id="my-result" style="display:none">
+        <div class="my-card" style="margin-top:12px">
+          <h3>신청 내역</h3>
+          <div class="my-info-row">
+            <span class="my-info-label">강좌코드</span>
+            <span class="my-info-val" id="my-code"></span>
+          </div>
+          <div class="my-info-row">
+            <span class="my-info-label">강좌명</span>
+            <span class="my-info-val" id="my-cname"></span>
+          </div>
+          <div class="my-info-row">
+            <span class="my-info-label">신청 시각</span>
+            <span class="my-info-val" id="my-time"></span>
+          </div>
+          <div class="my-info-row">
+            <span class="my-info-label">상태</span>
+            <span class="my-info-val" id="my-status"></span>
+          </div>
+          <button class="btn-mycancel" id="my-cancel-btn" onclick="cancelEnrollment()">신청 취소</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /main -->
+
+<!-- ── 신청 모달 ── -->
+<div class="modal-overlay" id="apply-modal">
+  <div class="modal">
+    <h2>수강신청</h2>
+    <div class="modal-sub" id="apply-modal-sub">선착순 접수 · 1인 1강좌</div>
+    <div class="modal-course" id="apply-modal-course"></div>
+
+    <div class="phone-notice">
+      📱 <strong>휴대폰 번호는 수강 안내 및 본인 확인 용도로 사용되니 정확하게 입력해 주세요.</strong>
+    </div>
+
+    <div class="form-group">
+      <label>학교명 <span style="color:var(--red)">*</span></label>
+      <input type="text" id="f-school" placeholder="예: OO고등학교" autocomplete="off">
+    </div>
+    <div class="form-group">
+      <label>학번 <span style="color:var(--red)">*</span></label>
+      <input type="text" id="f-stno" placeholder="예: 20261001" autocomplete="off">
+    </div>
+    <div class="form-group">
+      <label>이름 <span style="color:var(--red)">*</span></label>
+      <input type="text" id="f-name" placeholder="본명 입력" autocomplete="off">
+    </div>
+    <div class="form-group">
+      <label>휴대폰 번호 <span style="color:var(--red)">*</span></label>
+      <input type="tel" id="f-phone" placeholder="010-0000-0000" autocomplete="off">
+    </div>
+
+    <div class="modal-btns">
+      <button class="btn-cancel" onclick="closeApplyModal()">취소</button>
+      <button class="btn-submit" id="apply-submit-btn" onclick="submitApply()">신청하기</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── 토스트 ── -->
+<div id="toast"></div>
+
+<!-- ── Supabase CDN ── -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+
+<script>
+'use strict';
+
+// ══════════════════════════════════════════════════════════════
+// ⚙️  배포 전 설정: 아래 두 값을 Supabase 프로젝트 설정에서 복사
+// ══════════════════════════════════════════════════════════════
+const SUPABASE_URL      = 'https://yhrgvnttjlitukrxdfdo.supabase.co';  // 예: https://abcdefgh.supabase.co
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inlocmd2bnR0amxpdHVrcnhkZmRvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIyMDYzNDAsImV4cCI6MjA5Nzc4MjM0MH0.FKtEr-59H1hl1Aucb-x1MFQkAC--ylV0BEX5gg1lpg8';  // Supabase → Project Settings → API → anon/public key
+// ══════════════════════════════════════════════════════════════
+
+// open_at (KST) — 카운트다운 표시용 클라이언트 참조값.
+// 실제 오픈 판정은 서버(RPC) 기준. 이 값은 UI 전환에만 사용.
+const OPEN_AT_KST = new Date('2026-06-25T18:00:00+09:00');
+
+// ── 지역 색상 (기존 index.html 토큰 이식) ──
+const REGION_COLORS = {
+  "공주":"#1a5276","아산":"#117a65","당진":"#145a7c","홍성":"#7d6608",
+  "금산":"#922b21","논산계룡":"#6e2f8c","서천":"#1b6b5a","천안":"#2c3e50"
+};
+
+// ══════════════════════════════════════════
+// Supabase 초기화
+// ══════════════════════════════════════════
+let supabase;
+try {
+  if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
+    document.body.innerHTML = '<div style="padding:40px;text-align:center;font-family:sans-serif">' +
+      '<h2 style="color:#dc2626">설정 필요</h2>' +
+      '<p style="margin-top:12px;color:#555">app.html의 SUPABASE_URL과 SUPABASE_ANON_KEY를 입력해 주세요.</p></div>';
+  } else {
+    supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  }
+} catch(e) {
+  console.error('Supabase 초기화 실패', e);
+}
+
+// ══════════════════════════════════════════
+// 상태
+// ══════════════════════════════════════════
+let courses     = [];       // get_course_status() 결과
+let isOpen      = false;    // 수강신청 기간 여부
+let pollTimer   = null;
+let selectedCode = null;    // 현재 신청 모달에 열린 강좌 코드
+let applyLocked = false;    // 더블서밋 방지
+let myData      = null;     // 내 신청 내역
+
+// ══════════════════════════════════════════
+// 카운트다운
+// ══════════════════════════════════════════
+function updateCountdown() {
+  const now  = Date.now();
+  const diff = OPEN_AT_KST.getTime() - now;
+  if (diff <= 0) {
+    document.getElementById('countdown-banner').classList.remove('visible');
+    document.getElementById('open-badge').classList.add('visible');
+    isOpen = true;
+    return;
+  }
+  document.getElementById('countdown-banner').classList.add('visible');
+  document.getElementById('open-badge').classList.remove('visible');
+  isOpen = false;
+
+  const d = Math.floor(diff / 86400000);
+  const h = Math.floor((diff % 86400000) / 3600000);
+  const m = Math.floor((diff % 3600000)  / 60000);
+  const s = Math.floor((diff % 60000)    / 1000);
+  document.getElementById('cd-d').textContent = String(d).padStart(2,'0');
+  document.getElementById('cd-h').textContent = String(h).padStart(2,'0');
+  document.getElementById('cd-m').textContent = String(m).padStart(2,'0');
+  document.getElementById('cd-s').textContent = String(s).padStart(2,'0');
+}
+
+setInterval(updateCountdown, 1000);
+updateCountdown();
+
+// ══════════════════════════════════════════
+// 강좌 목록 로딩 (폴링)
+// ══════════════════════════════════════════
+async function loadCourses() {
+  if (!supabase) return;
+  try {
+    const { data, error } = await supabase.rpc('get_course_status');
+    if (error) throw error;
+    courses = data || [];
+    renderGrid();
+    updatePollStatus();
+    populateRegionFilter();
+  } catch(e) {
+    console.error('강좌 로딩 실패:', e);
+    document.getElementById('poll-status').textContent = '⚠️ 연결 오류 — 재시도 중';
+  }
+}
+
+function updatePollStatus() {
+  const now = new Date();
+  const hm  = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}:${String(now.getSeconds()).padStart(2,'0')}`;
+  document.getElementById('poll-status').textContent = `마지막 갱신: ${hm}`;
+}
+
+function startPolling() {
+  loadCourses();
+  // 10~15초 무작위 지터 (§11-4 권고)
+  const jitter = 10000 + Math.random() * 5000;
+  pollTimer = setTimeout(function loop() {
+    loadCourses();
+    pollTimer = setTimeout(loop, jitter);
+  }, jitter);
+}
+
+// ══════════════════════════════════════════
+// 지역 필터
+// ══════════════════════════════════════════
+let regions = new Set();
+function populateRegionFilter() {
+  const sel = document.getElementById('region-filter');
+  const cur = sel.value;
+  courses.forEach(c => regions.add(c.region));
+  const sorted = [...regions].sort();
+  // 현재 선택 유지하며 옵션 갱신
+  sel.innerHTML = '<option value="">지역 전체</option>' +
+    sorted.map(r => `<option value="${r}"${cur===r?' selected':''}>${r}</option>`).join('');
+}
+
+// ══════════════════════════════════════════
+// 카드 렌더링
+// ══════════════════════════════════════════
+function getFilteredCourses() {
+  const q   = document.getElementById('search-input').value.trim().toLowerCase();
+  const reg = document.getElementById('region-filter').value;
+  return courses.filter(c => {
+    if (reg && c.region !== reg) return false;
+    if (q && !`${c.name}${c.org}${c.region}`.toLowerCase().includes(q)) return false;
+    return true;
+  });
+}
+
+function renderGrid() {
+  const filtered = getFilteredCourses();
+  document.getElementById('result-count').textContent = `${filtered.length}개`;
+
+  const grid = document.getElementById('course-grid');
+  grid.innerHTML = filtered.map(c => cardHTML(c)).join('');
+}
+
+function cardHTML(c) {
+  const color = REGION_COLORS[c.region] || '#152460';
+  const pct   = c.capacity > 0 ? Math.round((c.enrolled_count / c.capacity) * 100) : 0;
+
+  // DC26B054: 별도모집
+  if (!c.is_registerable) {
+    return `
+    <div class="card not-reg">
+      <div class="ch" style="background:${color}">
+        <div class="ccode">${c.code}</div>
+        <div class="cinst">${c.org}</div>
+        <div class="cname">${c.name}</div>
+      </div>
+      <div class="cb">
+        <div class="seat-row">
+          <span class="seat-badge special">보령시 별도 모집</span>
+        </div>
+        <button class="apply-btn special" disabled>별도 모집 — 신청 불가</button>
+      </div>
+    </div>`;
+  }
+
+  const isFull   = c.is_full || c.is_closed_manual;
+  const remaining = Math.max(c.capacity - c.enrolled_count, 0);
+
+  let seatClass = 'ok', barClass = '';
+  if (isFull)                 { seatClass = 'full'; barClass = 'full'; }
+  else if (remaining <= 3)    { seatClass = 'warn'; barClass = 'warn'; }
+
+  const seatLabel = isFull
+    ? '마감'
+    : (isOpen ? `잔여 ${remaining}석` : `정원 ${c.capacity}명`);
+
+  const btnLabel = !isOpen
+    ? '신청 대기 중'
+    : (isFull ? '마감' : '신청하기');
+  const btnClass = !isOpen ? 'dis' : (isFull ? 'dis' : 'can');
+  const btnClick = (!isOpen || isFull) ? '' : `onclick="openApplyModal('${c.code}')"`;
+
+  return `
+  <div class="card${isFull ? ' full' : ''}">
+    <div class="ch" style="background:${color}">
+      <div class="ccode">${c.code}</div>
+      <div class="cinst">${c.org} · ${c.region}</div>
+      <div class="cname">${c.name}</div>
+    </div>
+    <div class="cb">
+      <div class="seat-row">
+        <span class="seat-badge ${seatClass}">${seatLabel}</span>
+        <div class="seat-bar-wrap">
+          <div class="seat-bar ${barClass}" style="width:${Math.min(pct,100)}%"></div>
+        </div>
+      </div>
+      <button class="apply-btn ${btnClass}" ${isFull||!isOpen?'disabled':''} ${btnClick}>${btnLabel}</button>
+    </div>
+  </div>`;
+}
+
+// ══════════════════════════════════════════
+// 신청 모달
+// ══════════════════════════════════════════
+function openApplyModal(code) {
+  if (!isOpen) { showToast('수강신청 오픈 전입니다.', 'err'); return; }
+  const c = courses.find(x => x.code === code);
+  if (!c) return;
+  if (c.is_full) { showToast('이미 마감된 강좌입니다.', 'err'); return; }
+  selectedCode = code;
+  document.getElementById('apply-modal-course').textContent = `[${c.code}] ${c.name} · ${c.org}`;
+  document.getElementById('apply-modal-sub').textContent = `선착순 접수 · 잔여 ${Math.max(c.capacity-c.enrolled_count,0)}석`;
+  // 폼 초기화
+  ['f-school','f-stno','f-name','f-phone'].forEach(id => document.getElementById(id).value='');
+  applyLocked = false;
+  document.getElementById('apply-submit-btn').disabled = false;
+  document.getElementById('apply-submit-btn').textContent = '신청하기';
+  document.getElementById('apply-modal').classList.add('open');
+}
+
+function closeApplyModal() {
+  document.getElementById('apply-modal').classList.remove('open');
+  selectedCode = null;
+}
+
+document.getElementById('apply-modal').addEventListener('click', function(e) {
+  if (e.target === this) closeApplyModal();
+});
+
+async function submitApply() {
+  if (applyLocked) return;
+  const school = document.getElementById('f-school').value.trim();
+  const stno   = document.getElementById('f-stno').value.trim();
+  const name   = document.getElementById('f-name').value.trim();
+  const phone  = document.getElementById('f-phone').value.trim();
+
+  if (!school || !stno || !name || !phone) {
+    showToast('모든 항목을 입력해 주세요.', 'err'); return;
+  }
+  if (!/^[0-9\-+\s]{8,15}$/.test(phone)) {
+    showToast('휴대폰 번호를 확인해 주세요.', 'err'); return;
+  }
+
+  applyLocked = true;
+  const btn = document.getElementById('apply-submit-btn');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span> 처리 중...';
+
+  try {
+    const { data, error } = await supabase.rpc('apply_course', {
+      p_code:       selectedCode,
+      p_school:     school,
+      p_student_no: stno,
+      p_name:       name,
+      p_phone:      phone,
+    });
+    if (error) throw error;
+
+    if (data.ok) {
+      closeApplyModal();
+      showToast('✅ 수강신청이 완료되었습니다!', 'ok');
+      loadCourses();
+    } else {
+      const msgs = {
+        duplicate:       '이미 신청하셨습니다. (1인 1강좌)',
+        full:            '방금 마감되었습니다. 다른 강좌를 신청해 주세요.',
+        not_open:        '수강신청 기간이 아닙니다.',
+        between_periods: '1차 신청기간이 종료되었습니다. 2차 신청을 이용해 주세요.',
+        period_closed:   '신청기간이 종료되었습니다.',
+        not_registerable:'신청 불가 강좌입니다.',
+      };
+      showToast(msgs[data.error] || `오류: ${data.error}`, 'err');
+      applyLocked = false;
+      btn.disabled = false;
+      btn.textContent = '신청하기';
+    }
+  } catch(e) {
+    console.error(e);
+    showToast('서버 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.', 'err');
+    applyLocked = false;
+    btn.disabled = false;
+    btn.textContent = '신청하기';
+  }
+}
+
+// ══════════════════════════════════════════
+// 내 신청 조회
+// ══════════════════════════════════════════
+async function checkMyEnrollment() {
+  const school = document.getElementById('my-school').value.trim();
+  const stno   = document.getElementById('my-stno').value.trim();
+  const phone  = document.getElementById('my-phone').value.trim();
+
+  if (!school || !stno || !phone) {
+    showToast('학교·학번·휴대폰을 모두 입력해 주세요.', 'err'); return;
+  }
+
+  const btn = document.getElementById('my-check-btn');
+  btn.disabled = true;
+  btn.textContent = '조회 중...';
+
+  try {
+    const { data, error } = await supabase.rpc('get_my_enrollment', {
+      p_school:     school,
+      p_student_no: stno,
+      p_phone:      phone,
+    });
+    if (error) throw error;
+
+    if (data.ok) {
+      myData = data;
+      document.getElementById('my-code').textContent  = data.course_code;
+      document.getElementById('my-cname').textContent = data.course_name;
+      document.getElementById('my-time').textContent  =
+        new Date(data.created_at).toLocaleString('ko-KR', {timeZone:'Asia/Seoul'});
+      document.getElementById('my-status').textContent = data.status === 'active' ? '✅ 신청 완료' : '취소됨';
+      document.getElementById('my-cancel-btn').style.display = data.status === 'active' ? '' : 'none';
+      document.getElementById('my-result').style.display = '';
+    } else {
+      document.getElementById('my-result').style.display = 'none';
+      const msgs = { notfound: '신청 내역이 없습니다.' };
+      showToast(msgs[data.error] || '조회 실패: ' + data.error, 'err');
+    }
+  } catch(e) {
+    console.error(e);
+    showToast('서버 오류가 발생했습니다.', 'err');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = '조회';
+  }
+}
+
+// ══════════════════════════════════════════
+// 신청 취소
+// ══════════════════════════════════════════
+async function cancelEnrollment() {
+  if (!confirm('정말 취소하시겠습니까?\n취소 후 재신청 시 자리가 남아있어야 합니다.')) return;
+
+  const school = document.getElementById('my-school').value.trim();
+  const stno   = document.getElementById('my-stno').value.trim();
+  const phone  = document.getElementById('my-phone').value.trim();
+
+  const btn = document.getElementById('my-cancel-btn');
+  btn.disabled = true;
+  btn.textContent = '처리 중...';
+
+  try {
+    const { data, error } = await supabase.rpc('cancel_enrollment', {
+      p_school:     school,
+      p_student_no: stno,
+      p_phone:      phone,
+    });
+    if (error) throw error;
+
+    if (data.ok) {
+      showToast('취소되었습니다.', 'ok');
+      document.getElementById('my-result').style.display = 'none';
+      loadCourses();
+    } else {
+      const msgs = {
+        notfound:      '신청 내역이 없거나 정보가 일치하지 않습니다.',
+        period_closed: '신청기간이 종료되어 취소할 수 없습니다.',
+      };
+      showToast(msgs[data.error] || '취소 실패: ' + data.error, 'err');
+      btn.disabled = false;
+      btn.textContent = '신청 취소';
+    }
+  } catch(e) {
+    console.error(e);
+    showToast('서버 오류가 발생했습니다.', 'err');
+    btn.disabled = false;
+    btn.textContent = '신청 취소';
+  }
+}
+
+// ══════════════════════════════════════════
+// 탭 전환
+// ══════════════════════════════════════════
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', function() {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('on'));
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    this.classList.add('on');
+    const id = 'tab-' + this.dataset.tab;
+    document.getElementById(id).classList.add('active');
+    document.getElementById('filter-bar').style.display = this.dataset.tab === 'list' ? '' : 'none';
+  });
+});
+
+// ══════════════════════════════════════════
+// 검색/필터
+// ══════════════════════════════════════════
+document.getElementById('search-input').addEventListener('input', renderGrid);
+document.getElementById('region-filter').addEventListener('change', renderGrid);
+
+// ══════════════════════════════════════════
+// 토스트
+// ══════════════════════════════════════════
+let toastTimer;
+function showToast(msg, type='') {
+  const el = document.getElementById('toast');
+  el.textContent  = msg;
+  el.className    = 'show ' + type;
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.className='', 3500);
+}
+
+// ══════════════════════════════════════════
+// 초기화
+// ══════════════════════════════════════════
+if (supabase) startPolling();
+</script>
+</body>
+</html>

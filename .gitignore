@@ -1,0 +1,14 @@
+# 환경변수 — 절대 커밋 금지
+.env
+.env.*
+*.env
+
+# Supabase service_role 키가 들어갈 수 있는 파일
+.supabase/
+
+# 의존성
+node_modules/
+
+# OS
+.DS_Store
+Thumbs.db
