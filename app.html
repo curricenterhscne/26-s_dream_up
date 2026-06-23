@@ -6,6 +6,8 @@
 <title>2026 여름방학 꿈키움 수강신청</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;900&family=Noto+Serif+KR:wght@600;700&display=swap" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="_embed_data.js"></script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -18,777 +20,1069 @@
 html{scroll-behavior:smooth}
 body{font-family:'Noto Sans KR',sans-serif;background:var(--g50);color:var(--text);line-height:1.6}
 
-/* ── 히어로 ── */
+/* ── Hero ── */
 .hero{background:linear-gradient(135deg,#0d1940 0%,var(--navy) 45%,#1e3d9e 100%);
-  padding:56px 24px 40px;text-align:center;position:relative;overflow:hidden}
+  padding:48px 24px 36px;text-align:center;position:relative;overflow:hidden}
 .hero::before{content:'';position:absolute;inset:0;
   background:radial-gradient(ellipse at 20% 60%,rgba(41,82,217,.25) 0%,transparent 55%),
              radial-gradient(ellipse at 80% 20%,rgba(232,151,15,.12) 0%,transparent 50%)}
 .hero-in{position:relative;z-index:1;max-width:820px;margin:0 auto}
 .hero-badge{display:inline-block;background:var(--gold);color:var(--navy);
-  font-size:11px;font-weight:800;padding:4px 14px;border-radius:20px;letter-spacing:.8px;margin-bottom:16px}
-.hero h1{font-family:'Noto Serif KR',serif;font-size:clamp(20px,4vw,32px);
-  font-weight:700;color:#fff;margin-bottom:10px;line-height:1.4}
-.hero p{color:rgba(255,255,255,.7);font-size:13px;line-height:1.9;margin-bottom:20px}
+  font-size:11px;font-weight:800;padding:4px 14px;border-radius:20px;letter-spacing:.8px;margin-bottom:14px}
+.hero h1{font-family:'Noto Serif KR',serif;font-size:clamp(20px,4vw,30px);
+  color:#fff;margin-bottom:6px;line-height:1.4}
+.hero p{color:rgba(255,255,255,.8);font-size:13px}
+.hero-stats{display:flex;justify-content:center;gap:28px;margin-top:24px;flex-wrap:wrap}
+.hero-stat .val{font-size:26px;font-weight:900;color:var(--gold)}
+.hero-stat .lbl{font-size:11px;color:rgba(255,255,255,.7);margin-top:2px}
 
-/* ── 카운트다운 배너 ── */
-#countdown-banner{background:rgba(0,0,0,.35);backdrop-filter:blur(6px);
-  border:1px solid rgba(255,255,255,.15);border-radius:16px;
-  padding:18px 24px;margin:0 auto 8px;max-width:500px;display:none}
-#countdown-banner.visible{display:block}
-.cd-label{font-size:11px;color:rgba(255,255,255,.6);letter-spacing:.5px;margin-bottom:6px}
-.cd-digits{display:flex;gap:8px;justify-content:center;align-items:center;flex-wrap:wrap}
-.cd-unit{text-align:center}
-.cd-num{font-size:32px;font-weight:900;color:var(--gold);line-height:1;
-  font-variant-numeric:tabular-nums;font-family:'Noto Sans KR',sans-serif}
-.cd-sub{font-size:10px;color:rgba(255,255,255,.5)}
-.cd-sep{font-size:24px;font-weight:900;color:rgba(255,255,255,.3);margin-top:-4px}
+/* ── Guide ── */
+.guide{background:var(--white);border-bottom:1px solid var(--g200);padding:36px 20px}
+.guide .wrap{max-width:860px;margin:0 auto}
+.guide h2{text-align:center;color:var(--navy);font-size:17px;font-weight:700;margin-bottom:24px}
+.guide-steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:14px}
+.guide-step{display:flex;flex-direction:column;align-items:center;text-align:center;
+  background:var(--g50);border-radius:var(--r);padding:18px 14px}
+.step-num{width:34px;height:34px;border-radius:50%;background:var(--navy);color:#fff;
+  font-weight:800;font-size:15px;display:flex;align-items:center;justify-content:center;margin-bottom:10px}
+.step-title{font-weight:700;font-size:13px;color:var(--navy);margin-bottom:5px}
+.step-desc{font-size:12px;color:var(--g700);line-height:1.55}
 
-/* ── 오픈 후 상태 배지 ── */
+/* ── Status bar ── */
+.status-wrap{background:var(--sky);border-bottom:1px solid var(--g200);padding:11px 20px;text-align:center;min-height:42px}
 #open-badge{display:none;background:var(--mint);color:#fff;
-  border-radius:24px;padding:8px 20px;font-size:13px;font-weight:700;
-  align-items:center;gap:6px;margin-bottom:12px}
-#open-badge.visible{display:inline-flex}
-.pulse-dot{width:8px;height:8px;border-radius:50%;background:#fff;
-  animation:pulse 1.2s ease-in-out infinite}
-@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.7)}}
+  font-size:12px;font-weight:700;padding:3px 14px;border-radius:20px;margin-right:8px}
+#open-badge.visible{display:inline-block}
+#countdown{font-size:13px;color:var(--g700)}
 
-/* ── 탭 네비 ── */
-.tabs{background:#fff;border-bottom:1px solid var(--g200);position:sticky;top:0;z-index:200;
-  box-shadow:0 2px 10px rgba(0,0,0,.06)}
-.tabs-inner{max-width:900px;margin:0 auto;display:flex;padding:0 16px}
-.tab-btn{padding:14px 20px;font:600 13px 'Noto Sans KR',sans-serif;border:none;
-  background:none;cursor:pointer;color:var(--g400);border-bottom:3px solid transparent;
-  transition:color .18s,border-color .18s;white-space:nowrap}
-.tab-btn.on{color:var(--navy);border-bottom-color:var(--blue)}
-.tab-btn:hover{color:var(--navy)}
+/* ── Main ── */
+.wrap{max-width:900px;margin:0 auto;padding:20px 14px 64px}
 
-/* ── 메인 레이아웃 ── */
-.main{max-width:900px;margin:0 auto;padding:22px 16px}
-.section{display:none}
-.section.active{display:block}
+/* ── Tabs ── */
+.tabs{display:flex;gap:0;margin-bottom:18px;border-bottom:2px solid var(--g200)}
+.tab-btn{flex:1;padding:11px 8px;font-size:14px;font-weight:600;background:none;border:none;
+  cursor:pointer;color:var(--g400);border-bottom:3px solid transparent;margin-bottom:-2px;
+  transition:all .2s;font-family:inherit}
+.tab-btn.active{color:var(--navy);border-bottom-color:var(--navy)}
+.tab-btn:hover:not(.active){color:var(--g700)}
 
-/* ── 강좌 목록 ── */
-.list-header{display:flex;align-items:center;justify-content:space-between;
-  margin-bottom:14px;flex-wrap:wrap;gap:8px}
-.list-title{font:700 16px 'Noto Serif KR',serif;color:var(--navy)}
-.poll-status{font-size:11px;color:var(--g400)}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px}
-.card{background:#fff;border-radius:var(--r);border:1px solid var(--g200);
-  box-shadow:var(--sh);overflow:hidden;display:flex;flex-direction:column;
-  transition:transform .2s,box-shadow .2s,border-color .2s}
-.card:hover{transform:translateY(-3px);box-shadow:var(--sh2);border-color:var(--blue)}
-.card.full{opacity:.7}
-.card.not-reg{opacity:.65}
+/* ── Filter bar ── */
+.filter-bar{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px;align-items:center}
+.filter-chip{border:1.5px solid var(--g200);background:var(--white);color:var(--g700);
+  padding:4px 12px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;
+  transition:all .16s;white-space:nowrap;font-family:inherit}
+.filter-chip:hover{border-color:var(--blue);color:var(--blue)}
+.filter-chip.active{background:var(--navy);border-color:var(--navy);color:#fff}
+.search-box{border:1.5px solid var(--g200);background:var(--white);color:var(--text);
+  padding:5px 13px;border-radius:20px;font-size:13px;outline:none;font-family:inherit;
+  min-width:140px;transition:border-color .16s}
+.search-box:focus{border-color:var(--blue)}
+.filter-right{margin-left:auto;display:flex;align-items:center;gap:8px}
+#poll-ts{font-size:11px;color:var(--g400)}
 
-.ch{padding:14px 16px 10px;position:relative;overflow:hidden}
-.ch::after{content:'';position:absolute;right:-20px;top:-20px;width:80px;height:80px;
-  border-radius:50%;background:rgba(255,255,255,.07);pointer-events:none}
-.ccode{display:inline-block;background:rgba(255,255,255,.2);color:rgba(255,255,255,.9);
-  font-size:10px;font-weight:700;padding:2px 7px;border-radius:8px;letter-spacing:.4px;
-  font-family:monospace;margin-bottom:5px}
-.cinst{font-size:11px;color:rgba(255,255,255,.6);margin-bottom:2px}
-.cname{font-size:13px;font-weight:700;color:#fff;line-height:1.4}
+/* ── Course cards ── */
+#course-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px}
+.card{background:var(--white);border-radius:var(--r);box-shadow:var(--sh);
+  padding:16px;display:flex;flex-direction:column;gap:9px;transition:box-shadow .18s}
+.card:hover{box-shadow:var(--sh2)}
+.card-top{display:flex;align-items:flex-start;gap:8px}
+.field-badge{font-size:10px;font-weight:700;padding:3px 7px;border-radius:8px;
+  background:var(--sky);color:var(--blue);white-space:nowrap;flex-shrink:0;margin-top:2px}
+.card-name{font-weight:700;font-size:13px;color:var(--navy);line-height:1.4}
+.card-meta{font-size:11px;color:var(--g400);display:flex;flex-direction:column;gap:1px}
+.card-bottom{display:flex;align-items:center;justify-content:space-between;margin-top:2px}
+.seats{font-size:12px;font-weight:700}
+.seats.ok{color:var(--mint)}
+.seats.warn{color:var(--gold)}
+.seats.full{color:var(--red)}
+.card-btns{display:flex;gap:5px}
+.btn-sm{padding:5px 11px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;
+  border:1.5px solid transparent;transition:all .16s;font-family:inherit}
+.btn-detail{background:var(--white);border-color:var(--g200);color:var(--g700)}
+.btn-detail:hover{border-color:var(--blue);color:var(--blue)}
+.btn-apply{background:var(--blue);color:#fff;border-color:var(--blue)}
+.btn-apply:hover:not(:disabled){background:#1a3ec7}
+.btn-apply:disabled{background:var(--g200);border-color:var(--g200);color:var(--g400);cursor:not-allowed}
+.card.is-full{opacity:.72}
 
-.cb{padding:12px 14px;flex:1;display:flex;flex-direction:column;gap:10px}
-.seat-row{display:flex;align-items:center;justify-content:space-between;gap:8px}
-.seat-badge{font-size:12px;font-weight:700;padding:4px 10px;border-radius:20px}
-.seat-badge.ok{background:var(--sky);color:var(--navy)}
-.seat-badge.warn{background:#fef3c7;color:#92400e}
-.seat-badge.full{background:var(--g100);color:var(--g400)}
-.seat-badge.special{background:var(--mint-bg);color:#065f46}
-
-.seat-bar-wrap{height:5px;background:var(--g100);border-radius:3px;flex:1}
-.seat-bar{height:5px;border-radius:3px;transition:width .4s;background:var(--blue)}
-.seat-bar.warn{background:var(--gold)}
-.seat-bar.full{background:var(--g400)}
-
-.apply-btn{width:100%;padding:9px;border-radius:10px;border:none;cursor:pointer;
-  font:600 13px 'Noto Sans KR',sans-serif;transition:all .18s}
-.apply-btn.can{background:var(--blue);color:#fff}
-.apply-btn.can:hover{background:#1e3db5}
-.apply-btn.dis{background:var(--g100);color:var(--g400);cursor:not-allowed}
-.apply-btn.loading{opacity:.6;cursor:wait}
-.apply-btn.special{background:var(--mint-bg);color:#065f46;cursor:default;font-size:12px}
-
-/* ── 모달 ── */
-.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:500;
-  display:none;align-items:center;justify-content:center;padding:16px}
-.modal-overlay.open{display:flex}
-.modal{background:#fff;border-radius:20px;padding:28px 24px;max-width:440px;width:100%;
-  box-shadow:0 20px 60px rgba(0,0,0,.2);max-height:90vh;overflow-y:auto}
-.modal h2{font:700 17px 'Noto Serif KR',serif;color:var(--navy);margin-bottom:4px}
-.modal-sub{font-size:12px;color:var(--g400);margin-bottom:20px}
-.modal-course{background:var(--sky);border-radius:10px;padding:10px 14px;
-  font-size:12px;color:var(--navy);margin-bottom:18px;font-weight:500}
-
-.form-group{margin-bottom:14px}
-.form-group label{display:block;font-size:12px;font-weight:700;color:var(--g700);margin-bottom:5px}
-.form-group input{width:100%;padding:10px 13px;border:1.5px solid var(--g200);
-  border-radius:10px;font:14px 'Noto Sans KR',sans-serif;outline:none;
-  transition:border-color .2s,box-shadow .2s}
-.form-group input:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(41,82,217,.1)}
-.phone-notice{background:#fef9e7;border:1px solid #fde68a;border-radius:10px;
-  padding:10px 13px;font-size:12px;color:#92400e;margin-bottom:18px;line-height:1.6}
-.phone-notice strong{font-weight:700}
-
-.modal-btns{display:flex;gap:8px}
-.btn-cancel{flex:1;padding:11px;border-radius:10px;border:1.5px solid var(--g200);
-  background:#fff;color:var(--g700);font:600 13px 'Noto Sans KR',sans-serif;cursor:pointer;
-  transition:all .18s}
-.btn-cancel:hover{background:var(--g100)}
-.btn-submit{flex:2;padding:11px;border-radius:10px;border:none;
-  background:var(--blue);color:#fff;font:700 13px 'Noto Sans KR',sans-serif;cursor:pointer;
-  transition:all .18s}
-.btn-submit:hover{background:#1e3db5}
-.btn-submit:disabled{background:var(--g200);color:var(--g400);cursor:not-allowed}
-
-/* ── 내 신청 확인 ── */
-.my-wrap{max-width:480px;margin:0 auto}
-.my-card{background:#fff;border-radius:16px;border:1px solid var(--g200);
-  box-shadow:var(--sh);padding:24px;margin-top:16px}
-.my-card h3{font:700 15px 'Noto Serif KR',serif;color:var(--navy);margin-bottom:14px}
-.my-info-row{display:flex;justify-content:space-between;align-items:center;
-  padding:8px 0;border-bottom:1px solid var(--g100);font-size:13px}
-.my-info-row:last-of-type{border-bottom:none}
-.my-info-label{color:var(--g400);font-size:12px}
-.my-info-val{font-weight:600;color:var(--navy)}
-.btn-mycancel{width:100%;margin-top:16px;padding:11px;border-radius:10px;
-  border:1.5px solid var(--red);background:#fff;color:var(--red);
-  font:700 13px 'Noto Sans KR',sans-serif;cursor:pointer;transition:all .18s}
-.btn-mycancel:hover{background:var(--red-bg)}
-
-/* ── 토스트 ── */
-#toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);
-  background:var(--navy);color:#fff;padding:12px 22px;border-radius:30px;
-  font-size:13px;font-weight:600;z-index:900;transition:transform .3s ease;
-  pointer-events:none;white-space:nowrap;max-width:90vw;text-align:center}
-#toast.show{transform:translateX(-50%) translateY(0)}
-#toast.ok{background:var(--mint)}
-#toast.err{background:var(--red)}
-
-/* ── 로딩 스피너 ── */
-.spinner{display:inline-block;width:14px;height:14px;border:2px solid rgba(255,255,255,.3);
-  border-top-color:#fff;border-radius:50%;animation:spin .6s linear infinite;vertical-align:middle}
+/* ── Loading / empty ── */
+.loading{text-align:center;padding:56px 0;color:var(--g400)}
+.spinner{width:34px;height:34px;border:3px solid var(--g200);border-top-color:var(--blue);
+  border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 14px}
 @keyframes spin{to{transform:rotate(360deg)}}
+.empty-msg{text-align:center;padding:56px 0;color:var(--g400);font-size:14px}
 
-/* ── 검색/필터 바 ── */
-.filter-bar{background:#fff;border-bottom:1px solid var(--g200);padding:10px 16px}
-.filter-inner{max-width:900px;margin:0 auto;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
-.search-wrap{flex:1;min-width:140px;position:relative}
-.search-wrap input{width:100%;padding:8px 13px 8px 36px;border:1.5px solid var(--g200);
-  border-radius:10px;font:13px 'Noto Sans KR',sans-serif;outline:none;
-  transition:border-color .2s}
-.search-wrap input:focus{border-color:var(--blue)}
-.si{position:absolute;left:11px;top:50%;transform:translateY(-50%);color:var(--g400);font-size:14px}
-.fsel{padding:7px 10px;border:1.5px solid var(--g200);border-radius:10px;
-  font:13px 'Noto Sans KR',sans-serif;outline:none;cursor:pointer;background:#fff;
-  transition:border-color .2s}
-.fsel:focus{border-color:var(--blue)}
-.rc{font-size:12px;color:var(--g400);white-space:nowrap}
+/* ── Modals ── */
+.backdrop{position:fixed;inset:0;background:rgba(21,36,96,.55);
+  backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);
+  z-index:200;display:flex;align-items:center;justify-content:center;padding:12px}
+.modal{background:var(--white);border-radius:var(--r);box-shadow:var(--sh2);
+  width:100%;max-width:480px;max-height:92vh;overflow-y:auto;display:flex;flex-direction:column}
+.modal-head{display:flex;align-items:flex-start;justify-content:space-between;
+  padding:16px 18px 12px;border-bottom:1px solid var(--g200);gap:12px}
+.modal-head h3{font-size:15px;font-weight:700;color:var(--navy);line-height:1.35}
+.btn-close{background:none;border:none;cursor:pointer;color:var(--g400);font-size:17px;
+  padding:2px 4px;border-radius:6px;transition:color .16s;flex-shrink:0;font-family:inherit}
+.btn-close:hover{color:var(--navy)}
+.modal-body{padding:18px}
 
-/* ── 반응형 ── */
-@media(max-width:480px){
-  .tabs-inner{padding:0 4px}
-  .tab-btn{padding:12px 12px;font-size:12px}
-  .modal{border-radius:16px}
+/* ── Timer ── */
+.timer-section{background:var(--g50);border-radius:10px;padding:12px 14px;margin-bottom:16px}
+.timer-hint{font-size:12px;color:var(--g700);margin-bottom:8px;line-height:1.5}
+.timer-row{display:flex;align-items:center;gap:12px}
+.timer-num{font-size:28px;font-weight:900;color:var(--navy);min-width:40px}
+.timer-bar-wrap{flex:1}
+.timer-bar{height:8px;background:var(--g200);border-radius:4px;overflow:hidden}
+.timer-fill{height:100%;background:var(--mint);border-radius:4px;
+  transition:width .95s linear,background .4s}
+.timer-unit{font-size:12px;color:var(--g400)}
+
+/* ── Form ── */
+.form-group{margin-bottom:13px}
+.form-group label{display:block;font-size:12px;font-weight:700;color:var(--g700);margin-bottom:5px}
+.form-input{width:100%;padding:9px 11px;border:1.5px solid var(--g200);border-radius:8px;
+  font-size:14px;font-family:inherit;outline:none;transition:border-color .16s}
+.form-input:focus{border-color:var(--blue)}
+.form-hint{font-size:11px;color:var(--g400);margin-top:4px}
+
+/* ── School search ── */
+.school-wrap{position:relative}
+.school-dd{position:absolute;top:calc(100% + 2px);left:0;right:0;background:var(--white);
+  border:1.5px solid var(--g200);border-radius:8px;box-shadow:var(--sh2);
+  max-height:200px;overflow-y:auto;z-index:300;display:none;list-style:none;padding:0}
+.school-dd li{padding:9px 11px;cursor:pointer;font-size:13px;
+  border-bottom:1px solid var(--g100);transition:background .1s}
+.school-dd li:last-child{border-bottom:none}
+.school-dd li:hover,.school-dd li.focused{background:var(--sky)}
+.school-dd .s-region{font-size:11px;color:var(--g400);margin-left:6px}
+
+/* ── Stno selects ── */
+.stno-row{display:flex;align-items:center;gap:5px}
+.stno-row select{flex:1;min-width:66px;padding:8px 6px;border:1.5px solid var(--g200);
+  border-radius:8px;font-size:13px;font-family:inherit;outline:none;background:var(--white);
+  transition:border-color .16s}
+.stno-row select:focus{border-color:var(--blue)}
+.stno-sep{font-size:13px;color:var(--g700);flex-shrink:0}
+
+/* ── PIN ── */
+.pin-input{letter-spacing:6px;font-size:20px;font-weight:700;text-align:center;
+  max-width:130px;-webkit-text-security:disc}
+
+/* ── Buttons ── */
+.btn-primary{width:100%;padding:12px;background:var(--blue);color:#fff;border:none;
+  border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit;
+  transition:background .16s;margin-top:6px}
+.btn-primary:hover:not(:disabled){background:#1a3ec7}
+.btn-primary:disabled{background:var(--g200);color:var(--g400);cursor:not-allowed}
+.btn-secondary{width:100%;padding:10px;background:var(--white);color:var(--g700);
+  border:1.5px solid var(--g200);border-radius:10px;font-size:14px;font-weight:600;
+  cursor:pointer;font-family:inherit;transition:all .16s;margin-top:8px}
+.btn-secondary:hover{border-color:var(--g400);color:var(--text)}
+.btn-danger{background:var(--red)!important;border-color:var(--red)!important}
+.btn-danger:hover:not(:disabled){background:#b91c1c!important}
+
+/* ── Success box ── */
+.success-box{background:var(--mint-bg);border-radius:10px;padding:20px;margin-bottom:14px}
+.success-box .s-icon{font-size:32px;margin-bottom:8px}
+.success-box h4{color:#0a7a5e;font-size:16px;font-weight:700;margin-bottom:12px}
+.s-dl{display:grid;grid-template-columns:auto 1fr;gap:4px 12px;font-size:13px}
+.s-dl dt{color:var(--g400);font-weight:600}
+.s-dl dd{color:var(--text)}
+.warn-box{background:#fffbeb;border:1px solid #fcd34d;border-radius:8px;
+  padding:10px 13px;font-size:12px;color:#92400e;margin-top:10px;line-height:1.55}
+
+/* ── Detail modal ── */
+.detail-tbl{width:100%;font-size:13px;border-collapse:collapse;margin-bottom:13px}
+.detail-tbl th{text-align:left;width:72px;color:var(--g400);font-weight:600;
+  padding:6px 0;vertical-align:top;white-space:nowrap;border-bottom:1px solid var(--g100)}
+.detail-tbl td{color:var(--text);padding:6px 0;vertical-align:top;
+  border-bottom:1px solid var(--g100)}
+.detail-intro{font-size:13px;color:var(--g700);line-height:1.7;
+  background:var(--g50);border-radius:8px;padding:13px;margin-bottom:16px}
+.detail-seats{font-size:13px;font-weight:700;margin-bottom:12px}
+
+/* ── My enrollment tab ── */
+.panel{background:var(--white);border-radius:var(--r);box-shadow:var(--sh);
+  padding:18px;margin-bottom:14px}
+.panel h3{font-size:14px;font-weight:700;color:var(--navy);margin-bottom:14px}
+.result-card{background:var(--g50);border-radius:10px;padding:14px;margin-top:10px}
+.result-card .rc-name{font-weight:700;color:var(--navy);font-size:14px;margin-bottom:5px}
+.result-card .rc-meta{font-size:12px;color:var(--g700)}
+.status-badge{display:inline-block;padding:2px 9px;border-radius:12px;
+  font-size:11px;font-weight:700;margin-left:7px}
+.s-active{background:var(--mint-bg);color:var(--mint)}
+.s-cancelled{background:var(--g100);color:var(--g400)}
+
+/* ── Toast ── */
+.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);
+  background:#1e293b;color:#fff;padding:11px 18px;border-radius:24px;
+  font-size:13px;font-weight:600;box-shadow:var(--sh2);z-index:400;
+  opacity:0;transition:opacity .25s;pointer-events:none;max-width:88vw;text-align:center}
+.toast.success{background:var(--mint)}
+.toast.error{background:var(--red)}
+.toast.show{opacity:1}
+
+/* ── Responsive ── */
+@media(max-width:500px){
+  #course-grid{grid-template-columns:1fr}
+  .guide-steps{grid-template-columns:1fr 1fr}
+  .hero-stats{gap:18px}
+  .modal{max-height:95vh}
 }
 </style>
 </head>
 <body>
 
-<!-- ── 히어로 ── -->
-<div class="hero">
+<!-- ══ Hero ══ -->
+<header class="hero">
   <div class="hero-in">
-    <span class="hero-badge">2026 여름방학</span>
-    <h1>꿈키움 학교 밖 교육<br>수강신청</h1>
-    <p>충남 대학·기관 연계 창의적체험활동 강좌<br>88개 강좌 · 전 강좌 정원 15명 · 선착순 접수</p>
+    <div class="hero-badge">2026 여름방학 꿈키움 대학탐방</div>
+    <h1>수강신청</h1>
+    <p>충청남도 고등학생 대상 선착순 대학 탐방 프로그램</p>
+    <div class="hero-stats">
+      <div class="hero-stat"><div class="val">89</div><div class="lbl">개 강좌</div></div>
+      <div class="hero-stat"><div class="val">15</div><div class="lbl">강좌당 정원</div></div>
+      <div class="hero-stat"><div class="val" id="total-remaining">-</div><div class="lbl">남은 좌석</div></div>
+    </div>
+  </div>
+</header>
 
-    <!-- 카운트다운 (오픈 전) -->
-    <div id="countdown-banner">
-      <div class="cd-label">수강신청 오픈까지</div>
-      <div class="cd-digits">
-        <div class="cd-unit"><div class="cd-num" id="cd-d">--</div><div class="cd-sub">일</div></div>
-        <div class="cd-sep">:</div>
-        <div class="cd-unit"><div class="cd-num" id="cd-h">--</div><div class="cd-sub">시간</div></div>
-        <div class="cd-sep">:</div>
-        <div class="cd-unit"><div class="cd-num" id="cd-m">--</div><div class="cd-sub">분</div></div>
-        <div class="cd-sep">:</div>
-        <div class="cd-unit"><div class="cd-num" id="cd-s">--</div><div class="cd-sub">초</div></div>
+<!-- ══ Guide ══ -->
+<section class="guide">
+  <div class="wrap">
+    <h2>📋 신청 방법 안내</h2>
+    <div class="guide-steps">
+      <div class="guide-step">
+        <div class="step-num">1</div>
+        <div class="step-title">강좌 선택</div>
+        <div class="step-desc">목록에서 원하는 강좌의 <b>[신청하기]</b>를 클릭하세요. <b>1인 1강좌</b>만 신청 가능합니다.</div>
       </div>
-      <div style="margin-top:10px;font-size:11px;color:rgba(255,255,255,.5)">
-        오픈 시각: 2026년 6월 25일(목) 오후 6시 정각 (서버 시각 기준)
+      <div class="guide-step">
+        <div class="step-num">2</div>
+        <div class="step-title">30초 안에 입력</div>
+        <div class="step-desc">좌석이 임시 확보됩니다. <b>30초</b> 안에 학교·학번·이름·연락처·취소비번을 입력하세요.</div>
+      </div>
+      <div class="guide-step">
+        <div class="step-num">3</div>
+        <div class="step-title">신청 완료</div>
+        <div class="step-desc"><b>[신청 완료]</b>를 누르면 자리가 즉시 확정됩니다. 취소비번을 반드시 기억해두세요.</div>
+      </div>
+      <div class="guide-step">
+        <div class="step-num">4</div>
+        <div class="step-title">취소 방법</div>
+        <div class="step-desc">'내 신청 확인·취소' 탭에서 <b>취소비번(4자리)</b>을 입력해 언제든지 취소할 수 있습니다.</div>
       </div>
     </div>
+  </div>
+</section>
 
-    <!-- 오픈 후 배지 -->
-    <div id="open-badge"><span class="pulse-dot"></span> 수강신청 진행 중</div>
+<!-- ══ Status bar ══ -->
+<div class="status-wrap">
+  <span id="open-badge">🟢 신청 가능</span>
+  <span id="countdown"></span>
+</div>
+
+<!-- ══ Main ══ -->
+<main class="wrap">
+
+  <!-- Tabs -->
+  <div class="tabs">
+    <button class="tab-btn active" id="tbn-courses" onclick="switchTab('courses')">📚 강좌 목록</button>
+    <button class="tab-btn" id="tbn-my" onclick="switchTab('my')">👤 내 신청 확인·취소</button>
+  </div>
+
+  <!-- ── 강좌 목록 탭 ── -->
+  <div id="tab-courses">
+    <div class="filter-bar" id="filter-bar">
+      <div class="filter-right">
+        <input class="search-box" type="text" placeholder="강좌명 검색" oninput="setNameFilter(this.value)"/>
+        <span id="poll-ts"></span>
+      </div>
+    </div>
+    <div id="course-grid">
+      <div class="loading"><div class="spinner"></div><p>강좌 목록을 불러오는 중…</p></div>
+    </div>
+  </div>
+
+  <!-- ── 내 신청 탭 ── -->
+  <div id="tab-my" style="display:none">
+    <div class="panel">
+      <h3>내 신청 조회</h3>
+      <div class="form-group">
+        <label for="my-school-inp">학교</label>
+        <div class="school-wrap">
+          <input id="my-school-inp" class="form-input" type="text" placeholder="학교명을 입력하세요" autocomplete="off"/>
+          <input type="hidden" id="my-school-code"/>
+          <ul id="my-school-dd" class="school-dd"></ul>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>학번 (학년·반·번호)</label>
+        <div class="stno-row">
+          <select id="my-grade"><option value="">학년</option><option>1</option><option>2</option><option>3</option></select>
+          <span class="stno-sep">학년</span>
+          <select id="my-cls"><option value="">반</option></select>
+          <span class="stno-sep">반</span>
+          <select id="my-num"><option value="">번호</option></select>
+          <span class="stno-sep">번</span>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="my-phone">연락처</label>
+        <input id="my-phone" class="form-input" type="tel" placeholder="01012345678"/>
+      </div>
+      <button class="btn-primary" id="my-search-btn" onclick="checkMyEnrollment()">조회하기</button>
+    </div>
+    <div id="my-result"></div>
+    <div id="my-cancel-panel" class="panel" style="display:none">
+      <h3>신청 취소</h3>
+      <div class="form-group">
+        <label for="my-pin">취소비번 (숫자 4자리)</label>
+        <input id="my-pin" class="form-input pin-input" type="password" maxlength="4" placeholder="••••" inputmode="numeric"/>
+      </div>
+      <button class="btn-primary btn-danger" onclick="cancelEnrollment()">취소하기</button>
+    </div>
+  </div>
+
+</main>
+
+<!-- ══ Reserve Modal ══ -->
+<div id="reserve-modal" class="backdrop" style="display:none" onclick="onBackdropClick(event,'reserve-modal')">
+  <div class="modal" id="reserve-box">
+    <div class="modal-head">
+      <h3 id="modal-course-name">강좌 신청</h3>
+      <button class="btn-close" onclick="closeReserveModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <!-- timer -->
+      <div class="timer-section">
+        <div class="timer-hint">⏱ 좌석이 임시 확보되었습니다. <b>30초</b> 안에 아래 정보를 입력하고 [신청 완료]를 눌러주세요.</div>
+        <div class="timer-row">
+          <div class="timer-num" id="timer-num">30</div>
+          <div class="timer-bar-wrap">
+            <div class="timer-bar"><div id="timer-fill" class="timer-fill" style="width:100%"></div></div>
+          </div>
+          <div class="timer-unit">초</div>
+        </div>
+      </div>
+
+      <!-- form -->
+      <div id="r-form-wrap">
+        <div class="form-group">
+          <label>학교 <span style="color:var(--red)">*</span></label>
+          <div class="school-wrap">
+            <input id="r-school-inp" class="form-input" type="text" placeholder="학교명을 입력하세요" autocomplete="off"/>
+            <input type="hidden" id="r-school-code"/>
+            <ul id="r-school-dd" class="school-dd"></ul>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>학번 (학년·반·번호) <span style="color:var(--red)">*</span></label>
+          <div class="stno-row">
+            <select id="r-grade"><option value="">학년</option><option>1</option><option>2</option><option>3</option></select>
+            <span class="stno-sep">학년</span>
+            <select id="r-cls"><option value="">반</option></select>
+            <span class="stno-sep">반</span>
+            <select id="r-num"><option value="">번호</option></select>
+            <span class="stno-sep">번</span>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="r-name">이름 <span style="color:var(--red)">*</span></label>
+          <input id="r-name" class="form-input" type="text" placeholder="홍길동"/>
+        </div>
+        <div class="form-group">
+          <label for="r-phone">연락처 <span style="color:var(--red)">*</span></label>
+          <input id="r-phone" class="form-input" type="tel" placeholder="01012345678"/>
+        </div>
+        <div class="form-group">
+          <label for="r-pin">취소비번 (숫자 4자리) <span style="color:var(--red)">*</span></label>
+          <input id="r-pin" class="form-input pin-input" type="password" maxlength="4" placeholder="••••" inputmode="numeric"/>
+          <div class="form-hint">취소 시 필요합니다. 기억하기 쉬운 번호로 설정하세요.</div>
+        </div>
+        <button class="btn-primary" id="r-submit-btn" onclick="submitConfirm()">신청 완료</button>
+        <button class="btn-secondary" onclick="closeReserveModal()">취소 (좌석 반납)</button>
+      </div>
+
+      <!-- success state -->
+      <div id="r-success" style="display:none">
+        <div class="success-box">
+          <div class="s-icon">✅</div>
+          <h4>신청이 완료되었습니다!</h4>
+          <dl class="s-dl" id="s-dl"></dl>
+        </div>
+        <div class="warn-box">⚠️ 취소비번을 꼭 기억해 두세요. '내 신청 확인·취소' 탭에서 취소 시 필요합니다.</div>
+        <button class="btn-primary" style="margin-top:14px" onclick="closeSuccessModal()">확인</button>
+      </div>
+    </div>
   </div>
 </div>
 
-<!-- ── 탭 네비 ── -->
-<div class="tabs">
-  <div class="tabs-inner">
-    <button class="tab-btn on" data-tab="list">강좌 목록</button>
-    <button class="tab-btn" data-tab="my">내 신청 확인/취소</button>
-  </div>
-</div>
-
-<!-- ── 필터 바 (강좌 목록 탭에만) ── -->
-<div class="filter-bar" id="filter-bar">
-  <div class="filter-inner">
-    <div class="search-wrap">
-      <span class="si">🔍</span>
-      <input type="text" id="search-input" placeholder="강좌명·기관·지역 검색">
-    </div>
-    <select class="fsel" id="region-filter">
-      <option value="">지역 전체</option>
-    </select>
-    <span class="rc" id="result-count"></span>
-  </div>
-</div>
-
-<!-- ── 메인 콘텐츠 ── -->
-<div class="main">
-
-  <!-- 강좌 목록 -->
-  <div class="section active" id="tab-list">
-    <div class="list-header">
-      <div class="list-title">강좌 목록</div>
-      <div class="poll-status" id="poll-status">로딩 중...</div>
-    </div>
-    <div class="grid" id="course-grid">
-      <!-- 카드 JS 생성 -->
-    </div>
-  </div>
-
-  <!-- 내 신청 확인/취소 -->
-  <div class="section" id="tab-my">
-    <div class="my-wrap">
-      <div class="my-card">
-        <h3>내 신청 확인</h3>
-        <div style="margin-bottom:14px;font-size:12px;color:var(--g400)">
-          학교·학번·휴대폰을 입력하면 신청 내역을 확인할 수 있습니다.
-        </div>
-        <div class="form-group">
-          <label>학교명</label>
-          <input type="text" id="my-school" placeholder="예: OO고등학교">
-        </div>
-        <div class="form-group">
-          <label>학번</label>
-          <input type="text" id="my-stno" placeholder="예: 20261001">
-        </div>
-        <div class="form-group">
-          <label>휴대폰 번호</label>
-          <input type="tel" id="my-phone" placeholder="010-0000-0000">
-        </div>
-        <button class="btn-submit" id="my-check-btn" style="width:100%;margin-top:4px" onclick="checkMyEnrollment()">조회</button>
-      </div>
-
-      <div id="my-result" style="display:none">
-        <div class="my-card" style="margin-top:12px">
-          <h3>신청 내역</h3>
-          <div class="my-info-row">
-            <span class="my-info-label">강좌코드</span>
-            <span class="my-info-val" id="my-code"></span>
-          </div>
-          <div class="my-info-row">
-            <span class="my-info-label">강좌명</span>
-            <span class="my-info-val" id="my-cname"></span>
-          </div>
-          <div class="my-info-row">
-            <span class="my-info-label">신청 시각</span>
-            <span class="my-info-val" id="my-time"></span>
-          </div>
-          <div class="my-info-row">
-            <span class="my-info-label">상태</span>
-            <span class="my-info-val" id="my-status"></span>
-          </div>
-          <button class="btn-mycancel" id="my-cancel-btn" onclick="cancelEnrollment()">신청 취소</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-</div><!-- /main -->
-
-<!-- ── 신청 모달 ── -->
-<div class="modal-overlay" id="apply-modal">
+<!-- ══ Detail Modal ══ -->
+<div id="detail-modal" class="backdrop" style="display:none" onclick="onBackdropClick(event,'detail-modal')">
   <div class="modal">
-    <h2>수강신청</h2>
-    <div class="modal-sub" id="apply-modal-sub">선착순 접수 · 1인 1강좌</div>
-    <div class="modal-course" id="apply-modal-course"></div>
-
-    <div class="phone-notice">
-      📱 <strong>휴대폰 번호는 수강 안내 및 본인 확인 용도로 사용되니 정확하게 입력해 주세요.</strong>
+    <div class="modal-head">
+      <h3 id="d-title">강좌 상세</h3>
+      <button class="btn-close" onclick="closeDetailModal()">✕</button>
     </div>
-
-    <div class="form-group">
-      <label>학교명 <span style="color:var(--red)">*</span></label>
-      <input type="text" id="f-school" placeholder="예: OO고등학교" autocomplete="off">
-    </div>
-    <div class="form-group">
-      <label>학번 <span style="color:var(--red)">*</span></label>
-      <input type="text" id="f-stno" placeholder="예: 20261001" autocomplete="off">
-    </div>
-    <div class="form-group">
-      <label>이름 <span style="color:var(--red)">*</span></label>
-      <input type="text" id="f-name" placeholder="본명 입력" autocomplete="off">
-    </div>
-    <div class="form-group">
-      <label>휴대폰 번호 <span style="color:var(--red)">*</span></label>
-      <input type="tel" id="f-phone" placeholder="010-0000-0000" autocomplete="off">
-    </div>
-
-    <div class="modal-btns">
-      <button class="btn-cancel" onclick="closeApplyModal()">취소</button>
-      <button class="btn-submit" id="apply-submit-btn" onclick="submitApply()">신청하기</button>
+    <div class="modal-body">
+      <div class="detail-seats" id="d-seats"></div>
+      <table class="detail-tbl" id="d-table"></table>
+      <div class="detail-intro" id="d-intro"></div>
+      <button class="btn-primary" id="d-apply-btn" onclick="applyFromDetail()">신청하기</button>
     </div>
   </div>
 </div>
 
-<!-- ── 토스트 ── -->
-<div id="toast"></div>
-
-<!-- ── Supabase CDN ── -->
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<!-- ══ Toast ══ -->
+<div class="toast" id="toast"></div>
 
 <script>
 'use strict';
 
-// ══════════════════════════════════════════════════════════════
-// ⚙️  배포 전 설정: 아래 두 값을 Supabase 프로젝트 설정에서 복사
-// ══════════════════════════════════════════════════════════════
-const SUPABASE_URL      = 'https://yhrgvnttjlitukrxdfdo.supabase.co';  // 예: https://abcdefgh.supabase.co
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inlocmd2bnR0amxpdHVrcnhkZmRvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIyMDYzNDAsImV4cCI6MjA5Nzc4MjM0MH0.FKtEr-59H1hl1Aucb-x1MFQkAC--ylV0BEX5gg1lpg8';  // Supabase → Project Settings → API → anon/public key
-// ══════════════════════════════════════════════════════════════
+// ── Config ──
+const SUPABASE_URL      = 'https://yhrgvnttjlitukrxdfdo.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inlocmd2bnR0amxpdHVrcnhkZmRvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIyMDYzNDAsImV4cCI6MjA5Nzc4MjM0MH0.FKtEr-59H1hl1Aucb-x1MFQkAC--ylV0BEX5gg1lpg8';
 
-// open_at — 서버에서 받아온 값으로 덮어씀 (get_open_status)
-// 초기값은 실제 오픈 시각 (서버 응답 전 카운트다운 표시용 fallback)
-let openAt        = new Date('2026-06-25T18:00:00+09:00');
-let serverTimeDiff = 0;  // 서버·클라이언트 시각 오프셋(ms)
+// ── Lookup maps (built from _embed_data.js) ──
+const SCHOOL_MAP = {};
+SCHOOLS.forEach(s => SCHOOL_MAP[s.code] = s);
+const DETAIL_MAP = {};
+COURSE_DETAILS.forEach(d => DETAIL_MAP[d.code] = d);
 
-// ── 지역 색상 (기존 index.html 토큰 이식) ──
-const REGION_COLORS = {
-  "공주":"#1a5276","아산":"#117a65","당진":"#145a7c","홍성":"#7d6608",
-  "금산":"#922b21","논산계룡":"#6e2f8c","서천":"#1b6b5a","천안":"#2c3e50"
-};
-
-// ══════════════════════════════════════════
-// Supabase 초기화
-// ══════════════════════════════════════════
+// ── State ──
 let sbClient;
-try {
-  if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
-    document.body.innerHTML = '<div style="padding:40px;text-align:center;font-family:sans-serif">' +
-      '<h2 style="color:#dc2626">설정 필요</h2>' +
-      '<p style="margin-top:12px;color:#555">app.html의 SUPABASE_URL과 SUPABASE_ANON_KEY를 입력해 주세요.</p></div>';
-  } else {
-    sbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-  }
-} catch(e) {
-  console.error('Supabase 초기화 실패', e);
+let serverTimeDiff = 0;
+let isOpen = false;
+let openAt = null;
+let courses = [];
+let filterField = '';
+let nameFilter = '';
+
+// Reserve modal state
+let currentRid  = null;
+let currentCode = null;
+let reserveInterval = null;
+let reservationConfirmed = false;
+let detailCode = null;
+
+// ── Field categories for filter ──
+const FIELDS = [
+  '공학·IT','생명·자연과학','의약·보건','경영·경제','예술·디자인',
+  '인문·어문','미디어·영상','식품·조리','사회·복지','법·경찰·군사',
+  '스포츠·체육','관광·서비스','항공·우주','반려동물·농업'
+];
+
+// ── Init ──
+async function init() {
+  sbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  buildFilterBar();
+  initSchoolSearch('r-school-inp',  'r-school-code',  'r-school-dd');
+  initSchoolSearch('my-school-inp', 'my-school-code', 'my-school-dd');
+  initStnoSelects('r-cls',  'r-num');
+  initStnoSelects('my-cls', 'my-num');
+  await loadOpenStatus();
+  await loadCourses();
+  startPolling();
 }
 
-// ══════════════════════════════════════════
-// 상태
-// ══════════════════════════════════════════
-let courses     = [];       // sbClient.rpc('get_course_status') 결과
-let isOpen      = false;    // 수강신청 기간 여부
-let pollTimer   = null;
-let selectedCode = null;    // 현재 신청 모달에 열린 강좌 코드
-let applyLocked = false;    // 더블서밋 방지
-let myData      = null;     // 내 신청 내역
+// ── Filter bar ──
+function buildFilterBar() {
+  const bar = document.getElementById('filter-bar');
+  const chips = `
+    <button class="filter-chip active" data-field="" onclick="setFilter('')">전체</button>
+    ${FIELDS.map(f => `<button class="filter-chip" data-field="${f}" onclick="setFilter('${f.replace(/'/g,"\\'")}')">${f}</button>`).join('')}
+  `;
+  bar.insertAdjacentHTML('afterbegin', chips);
+}
 
-// ══════════════════════════════════════════
-// 서버 오픈 상태 조회 (get_open_status RPC)
-// ══════════════════════════════════════════
+function setFilter(field) {
+  filterField = field;
+  document.querySelectorAll('#filter-bar .filter-chip').forEach(c =>
+    c.classList.toggle('active', c.dataset.field === field)
+  );
+  renderCourses();
+}
+
+function setNameFilter(val) {
+  nameFilter = val.trim();
+  renderCourses();
+}
+
+// ── School autocomplete ──
+function initSchoolSearch(inputId, codeId, ddId) {
+  const inp  = document.getElementById(inputId);
+  const code = document.getElementById(codeId);
+  const dd   = document.getElementById(ddId);
+  if (!inp) return;
+
+  inp.addEventListener('input', () => {
+    code.value = '';
+    const q = inp.value.trim();
+    if (!q) { dd.style.display = 'none'; return; }
+    const hits = SCHOOLS.filter(s => s.name.includes(q)).slice(0, 10);
+    if (!hits.length) { dd.style.display = 'none'; return; }
+    dd.innerHTML = hits.map(s =>
+      `<li data-code="${s.code}" data-name="${s.name.replace(/"/g,'&quot;')}">${s.name}<span class="s-region">${s.region}</span></li>`
+    ).join('');
+    dd.style.display = 'block';
+  });
+
+  dd.addEventListener('mousedown', e => {
+    const li = e.target.closest('li');
+    if (!li) return;
+    e.preventDefault();
+    inp.value  = li.dataset.name;
+    code.value = li.dataset.code;
+    dd.style.display = 'none';
+  });
+
+  inp.addEventListener('blur', () => setTimeout(() => { dd.style.display = 'none'; }, 200));
+}
+
+// ── Stno selects ──
+function initStnoSelects(clsId, numId) {
+  const c = document.getElementById(clsId);
+  const n = document.getElementById(numId);
+  if (c) for (let i = 1; i <= 20; i++) c.innerHTML += `<option value="${i}">${i}</option>`;
+  if (n) for (let i = 1; i <= 50; i++) n.innerHTML += `<option value="${i}">${i}</option>`;
+}
+
+function buildStno(gradeId, clsId, numId) {
+  const g = document.getElementById(gradeId).value;
+  const c = document.getElementById(clsId).value;
+  const n = document.getElementById(numId).value;
+  if (!g || !c || !n) return null;
+  return `${g}-${String(c).padStart(2,'0')}-${String(n).padStart(2,'0')}`;
+}
+
+// ── Open status ──
 async function loadOpenStatus() {
-  if (!sbClient) return;
   try {
     const { data, error } = await sbClient.rpc('get_open_status');
     if (error) throw error;
-    openAt         = new Date(data.open_at);
     serverTimeDiff = new Date(data.server_now).getTime() - Date.now();
-    isOpen         = data.is_open;
+    isOpen = data.is_open;
+    openAt = data.open_at ? new Date(data.open_at) : null;
+    renderStatusBar(data);
   } catch(e) {
-    console.warn('get_open_status 실패, 클라이언트 시각으로 대체:', e);
-    // fallback: 클라이언트 시각 기준
-    isOpen = Date.now() >= openAt.getTime();
+    console.warn('get_open_status:', e);
+    document.getElementById('countdown').textContent = '상태를 확인할 수 없습니다.';
   }
 }
 
-// ══════════════════════════════════════════
-// 카운트다운 (1초마다 갱신 — 서버 openAt 기준)
-// ══════════════════════════════════════════
-function updateCountdown() {
-  const serverNow = Date.now() + serverTimeDiff;
-  const diff      = openAt.getTime() - serverNow;
+function renderStatusBar(d) {
+  const badge = document.getElementById('open-badge');
+  const cd    = document.getElementById('countdown');
+  const now   = Date.now() + serverTimeDiff;
 
-  if (isOpen || diff <= 0) {
-    document.getElementById('countdown-banner').classList.remove('visible');
-    document.getElementById('open-badge').classList.add('visible');
-    return;
+  if (d.is_open) {
+    badge.classList.add('visible');
+    let extra = '';
+    if (d.close2_at) {
+      const left = Math.round((new Date(d.close2_at).getTime() - now) / 1000);
+      if (left > 0) extra = ` — 마감까지 ${fmtTime(left)}`;
+    }
+    cd.textContent = extra;
+  } else {
+    badge.classList.remove('visible');
+    if (d.open_at) {
+      const left = Math.round((new Date(d.open_at).getTime() - now) / 1000);
+      cd.textContent = left > 0 ? `신청 시작까지 ⏳ ${fmtTime(left)}` : '신청이 마감되었습니다.';
+    } else {
+      cd.textContent = '신청이 마감되었습니다.';
+    }
   }
-  document.getElementById('countdown-banner').classList.add('visible');
-  document.getElementById('open-badge').classList.remove('visible');
-
-  const d = Math.floor(diff / 86400000);
-  const h = Math.floor((diff % 86400000) / 3600000);
-  const m = Math.floor((diff % 3600000)  / 60000);
-  const s = Math.floor((diff % 60000)    / 1000);
-  document.getElementById('cd-d').textContent = String(d).padStart(2,'0');
-  document.getElementById('cd-h').textContent = String(h).padStart(2,'0');
-  document.getElementById('cd-m').textContent = String(m).padStart(2,'0');
-  document.getElementById('cd-s').textContent = String(s).padStart(2,'0');
 }
 
-setInterval(updateCountdown, 1000);
-updateCountdown();
+function fmtTime(sec) {
+  if (sec <= 0) return '0초';
+  const h = Math.floor(sec / 3600);
+  const m = Math.floor((sec % 3600) / 60);
+  const s = sec % 60;
+  if (h > 0) return `${h}시간 ${m}분 ${s}초`;
+  if (m > 0) return `${m}분 ${s}초`;
+  return `${s}초`;
+}
 
-// ══════════════════════════════════════════
-// 강좌 목록 로딩 (폴링)
-// ══════════════════════════════════════════
+// ── Load courses ──
 async function loadCourses() {
-  if (!sbClient) return;
   try {
     const { data, error } = await sbClient.rpc('get_course_status');
     if (error) throw error;
     courses = data || [];
-    renderGrid();
-    updatePollStatus();
-    populateRegionFilter();
+    const total = courses.reduce((s, c) => s + (c.remaining || 0), 0);
+    document.getElementById('total-remaining').textContent = total.toLocaleString();
+    const ts = new Date();
+    document.getElementById('poll-ts').textContent =
+      `${String(ts.getHours()).padStart(2,'0')}:${String(ts.getMinutes()).padStart(2,'0')} 갱신`;
+    renderCourses();
   } catch(e) {
-    console.error('강좌 로딩 실패:', e);
-    document.getElementById('poll-status').textContent = '⚠️ 연결 오류 — 재시도 중';
+    console.error('loadCourses:', e);
+    document.getElementById('course-grid').innerHTML =
+      '<div class="empty-msg">강좌 목록을 불러오지 못했습니다.<br>잠시 후 새로고침해 주세요.</div>';
   }
 }
 
-function updatePollStatus() {
-  const now = new Date();
-  const hm  = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}:${String(now.getSeconds()).padStart(2,'0')}`;
-  document.getElementById('poll-status').textContent = `마지막 갱신: ${hm}`;
-}
-
-function startPolling() {
-  // 오픈 상태 먼저 조회 → 카운트다운/버튼 즉시 갱신
-  loadOpenStatus().then(() => {
-    updateCountdown();
-    loadCourses();
+function renderCourses() {
+  let list = courses;
+  if (filterField) list = list.filter(c => {
+    const d = DETAIL_MAP[c.code];
+    return d && d.field.includes(filterField);
   });
-  // 10~15초 무작위 지터 (§11-4 권고)
-  const jitter = 10000 + Math.random() * 5000;
-  pollTimer = setTimeout(async function loop() {
-    await loadOpenStatus();
-    updateCountdown();
-    loadCourses();
-    pollTimer = setTimeout(loop, jitter);
-  }, jitter);
-}
-
-// ══════════════════════════════════════════
-// 지역 필터
-// ══════════════════════════════════════════
-let regions = new Set();
-function populateRegionFilter() {
-  const sel = document.getElementById('region-filter');
-  const cur = sel.value;
-  courses.forEach(c => regions.add(c.region));
-  const sorted = [...regions].sort();
-  // 현재 선택 유지하며 옵션 갱신
-  sel.innerHTML = '<option value="">지역 전체</option>' +
-    sorted.map(r => `<option value="${r}"${cur===r?' selected':''}>${r}</option>`).join('');
-}
-
-// ══════════════════════════════════════════
-// 카드 렌더링
-// ══════════════════════════════════════════
-function getFilteredCourses() {
-  const q   = document.getElementById('search-input').value.trim().toLowerCase();
-  const reg = document.getElementById('region-filter').value;
-  return courses.filter(c => {
-    if (reg && c.region !== reg) return false;
-    if (q && !`${c.name}${c.org}${c.region}`.toLowerCase().includes(q)) return false;
-    return true;
-  });
-}
-
-function renderGrid() {
-  const filtered = getFilteredCourses();
-  document.getElementById('result-count').textContent = `${filtered.length}개`;
+  if (nameFilter) list = list.filter(c => c.name.includes(nameFilter));
 
   const grid = document.getElementById('course-grid');
-  grid.innerHTML = filtered.map(c => cardHTML(c)).join('');
+  if (!list.length) {
+    grid.innerHTML = '<div class="empty-msg">해당하는 강좌가 없습니다.</div>';
+    return;
+  }
+  grid.innerHTML = list.map(renderCard).join('');
 }
 
-function cardHTML(c) {
-  const color = REGION_COLORS[c.region] || '#152460';
-  const pct   = c.capacity > 0 ? Math.round((c.enrolled_count / c.capacity) * 100) : 0;
+function renderCard(c) {
+  const d      = DETAIL_MAP[c.code] || {};
+  const field  = (d.field || '').split(' · ')[0];
+  const period = d.period || '';
+  const place  = (d.place || '').split('(')[0].trim().substring(0, 22);
 
-  // DC26B054: 별도모집
+  let seatHtml, btnHtml;
+
   if (!c.is_registerable) {
-    return `
-    <div class="card not-reg">
-      <div class="ch" style="background:${color}">
-        <div class="ccode">${c.code}</div>
-        <div class="cinst">${c.org}</div>
-        <div class="cname">${c.name}</div>
-      </div>
-      <div class="cb">
-        <div class="seat-row">
-          <span class="seat-badge special">보령시 별도 모집</span>
-        </div>
-        <button class="apply-btn special" disabled>별도 모집 — 신청 불가</button>
-      </div>
-    </div>`;
+    seatHtml = `<span class="seats full" style="color:var(--g400)">별도 모집</span>`;
+    btnHtml  = `<button class="btn-sm btn-apply" disabled>신청 불가</button>`;
+  } else if (c.is_full) {
+    seatHtml = `<span class="seats full">마감</span>`;
+    btnHtml  = `<button class="btn-sm btn-apply" disabled>마감</button>`;
+  } else {
+    const r   = c.remaining;
+    const cls = r <= 3 ? 'warn' : 'ok';
+    seatHtml = `<span class="seats ${cls}">잔여 ${r}석</span>`;
+    const dis = isOpen ? '' : 'disabled title="신청 기간이 아닙니다"';
+    btnHtml  = `<button class="btn-sm btn-apply" ${dis} onclick="openReserveModal('${c.code}',this)">신청하기</button>`;
   }
 
-  const isFull   = c.is_full || c.is_closed_manual;
-  const remaining = Math.max(c.capacity - c.enrolled_count, 0);
-
-  let seatClass = 'ok', barClass = '';
-  if (isFull)                 { seatClass = 'full'; barClass = 'full'; }
-  else if (remaining <= 3)    { seatClass = 'warn'; barClass = 'warn'; }
-
-  const seatLabel = isFull
-    ? '마감'
-    : (isOpen ? `잔여 ${remaining}석` : `정원 ${c.capacity}명`);
-
-  const btnLabel = !isOpen
-    ? '신청 대기 중'
-    : (isFull ? '마감' : '신청하기');
-  const btnClass = !isOpen ? 'dis' : (isFull ? 'dis' : 'can');
-  const btnClick = (!isOpen || isFull) ? '' : `onclick="openApplyModal('${c.code}')"`;
-
   return `
-  <div class="card${isFull ? ' full' : ''}">
-    <div class="ch" style="background:${color}">
-      <div class="ccode">${c.code}</div>
-      <div class="cinst">${c.org} · ${c.region}</div>
-      <div class="cname">${c.name}</div>
+  <div class="card${c.is_full ? ' is-full' : ''}">
+    <div class="card-top">
+      <span class="field-badge">${field}</span>
+      <div class="card-name">${c.name}</div>
     </div>
-    <div class="cb">
-      <div class="seat-row">
-        <span class="seat-badge ${seatClass}">${seatLabel}</span>
-        <div class="seat-bar-wrap">
-          <div class="seat-bar ${barClass}" style="width:${Math.min(pct,100)}%"></div>
-        </div>
+    <div class="card-meta">
+      <span>📅 ${period}</span>
+      <span>📍 ${place}</span>
+    </div>
+    <div class="card-bottom">
+      ${seatHtml}
+      <div class="card-btns">
+        <button class="btn-sm btn-detail" onclick="openDetailModal('${c.code}')">상세보기</button>
+        ${btnHtml}
       </div>
-      <button class="apply-btn ${btnClass}" ${isFull||!isOpen?'disabled':''} ${btnClick}>${btnLabel}</button>
     </div>
   </div>`;
 }
 
-// ══════════════════════════════════════════
-// 신청 모달
-// ══════════════════════════════════════════
-function openApplyModal(code) {
-  if (!isOpen) { showToast('수강신청 오픈 전입니다.', 'err'); return; }
-  const c = courses.find(x => x.code === code);
-  if (!c) return;
-  if (c.is_full) { showToast('이미 마감된 강좌입니다.', 'err'); return; }
-  selectedCode = code;
-  document.getElementById('apply-modal-course').textContent = `[${c.code}] ${c.name} · ${c.org}`;
-  document.getElementById('apply-modal-sub').textContent = `선착순 접수 · 잔여 ${Math.max(c.capacity-c.enrolled_count,0)}석`;
-  // 폼 초기화
-  ['f-school','f-stno','f-name','f-phone'].forEach(id => document.getElementById(id).value='');
-  applyLocked = false;
-  document.getElementById('apply-submit-btn').disabled = false;
-  document.getElementById('apply-submit-btn').textContent = '신청하기';
-  document.getElementById('apply-modal').classList.add('open');
-}
+// ── Reserve modal ──
+async function openReserveModal(code, btn) {
+  if (!isOpen) { showToast('신청 기간이 아닙니다.', 'error'); return; }
 
-function closeApplyModal() {
-  document.getElementById('apply-modal').classList.remove('open');
-  selectedCode = null;
-}
-
-document.getElementById('apply-modal').addEventListener('click', function(e) {
-  if (e.target === this) closeApplyModal();
-});
-
-async function submitApply() {
-  if (applyLocked) return;
-  const school = document.getElementById('f-school').value.trim();
-  const stno   = document.getElementById('f-stno').value.trim();
-  const name   = document.getElementById('f-name').value.trim();
-  const phone  = document.getElementById('f-phone').value.trim();
-
-  if (!school || !stno || !name || !phone) {
-    showToast('모든 항목을 입력해 주세요.', 'err'); return;
-  }
-  if (!/^[0-9\-+\s]{8,15}$/.test(phone)) {
-    showToast('휴대폰 번호를 확인해 주세요.', 'err'); return;
-  }
-
-  applyLocked = true;
-  const btn = document.getElementById('apply-submit-btn');
-  btn.disabled = true;
-  btn.innerHTML = '<span class="spinner"></span> 처리 중...';
+  const origTxt = btn ? btn.textContent : '';
+  if (btn) { btn.disabled = true; btn.textContent = '잠시만…'; }
 
   try {
-    const { data, error } = await sbClient.rpc('apply_course', {
-      p_code:       selectedCode,
-      p_school:     school,
-      p_student_no: stno,
-      p_name:       name,
-      p_phone:      phone,
+    const { data, error } = await sbClient.rpc('reserve_course', { p_code: code });
+    if (error) throw error;
+
+    if (!data.ok) {
+      showToast(reserveErrMsg(data.error), 'error');
+      if (btn) { btn.disabled = false; btn.textContent = origTxt; }
+      return;
+    }
+
+    // Got reservation — open modal
+    currentRid = data.reservation_id;
+    currentCode = code;
+    reservationConfirmed = false;
+
+    const cname = (courses.find(c => c.code === code) || {}).name || code;
+    document.getElementById('modal-course-name').textContent = cname;
+    resetEnrollForm();
+    document.getElementById('r-form-wrap').style.display = 'block';
+    document.getElementById('r-success').style.display = 'none';
+    document.getElementById('reserve-modal').style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+    startReserveTimer(data.expires_at);
+
+  } catch(e) {
+    console.error('reserve:', e);
+    showToast('서버 오류가 발생했습니다.', 'error');
+  }
+
+  if (btn) {
+    const c = courses.find(x => x.code === code);
+    btn.disabled = !isOpen || !c || c.is_full;
+    btn.textContent = origTxt;
+  }
+}
+
+function reserveErrMsg(err) {
+  return {
+    full:            '방금 마감되었습니다. 다른 강좌를 선택해 주세요.',
+    not_open:        '신청 기간이 아닙니다.',
+    between_periods: '신청 기간 사이의 휴식 시간입니다.',
+    period_closed:   '신청이 마감되었습니다.',
+    not_registerable:'신청할 수 없는 강좌입니다.'
+  }[err] || ('신청 불가: ' + err);
+}
+
+function startReserveTimer(expiresAt) {
+  const endMs   = new Date(expiresAt).getTime();
+  const totalSec = 30;
+
+  function tick() {
+    const now  = Date.now() + serverTimeDiff;
+    const left = Math.max(0, Math.ceil((endMs - now) / 1000));
+    const pct  = (left / totalSec) * 100;
+
+    document.getElementById('timer-num').textContent = left;
+    const fill = document.getElementById('timer-fill');
+    fill.style.width = pct + '%';
+    fill.style.background =
+      left <= 10 ? 'var(--red)' : left <= 20 ? 'var(--gold)' : 'var(--mint)';
+
+    if (left <= 0) {
+      clearInterval(reserveInterval);
+      showToast('시간이 초과되었습니다. 다시 신청해 주세요.', 'error');
+      _releaseAndClose();
+    }
+  }
+
+  tick();
+  reserveInterval = setInterval(tick, 1000);
+}
+
+async function closeReserveModal() {
+  clearInterval(reserveInterval);
+  if (currentRid && !reservationConfirmed) {
+    try { await sbClient.rpc('release_reservation', { p_rid: currentRid }); } catch(e){}
+  }
+  _closeModalState();
+}
+
+async function _releaseAndClose() {
+  if (currentRid && !reservationConfirmed) {
+    try { await sbClient.rpc('release_reservation', { p_rid: currentRid }); } catch(e){}
+  }
+  _closeModalState();
+}
+
+function _closeModalState() {
+  currentRid = null;
+  currentCode = null;
+  reservationConfirmed = false;
+  clearInterval(reserveInterval);
+  reserveInterval = null;
+  document.getElementById('reserve-modal').style.display = 'none';
+  document.body.style.overflow = '';
+  resetEnrollForm();
+  loadCourses();
+}
+
+function closeSuccessModal() {
+  _closeModalState();
+}
+
+function resetEnrollForm() {
+  ['r-school-inp','r-name','r-phone','r-pin'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = '';
+  });
+  const sc = document.getElementById('r-school-code');
+  if (sc) sc.value = '';
+  ['r-grade','r-cls','r-num'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = '';
+  });
+}
+
+async function submitConfirm() {
+  const schoolCode = document.getElementById('r-school-code').value;
+  const schoolName = document.getElementById('r-school-inp').value.trim();
+  const stno  = buildStno('r-grade', 'r-cls', 'r-num');
+  const name  = document.getElementById('r-name').value.trim();
+  const phone = document.getElementById('r-phone').value.replace(/\D/g, '');
+  const pin   = document.getElementById('r-pin').value.trim();
+
+  if (!schoolCode)                    { showToast('학교를 목록에서 선택해 주세요.', 'error'); return; }
+  if (!stno)                          { showToast('학년·반·번호를 모두 선택해 주세요.', 'error'); return; }
+  if (!name)                          { showToast('이름을 입력해 주세요.', 'error'); return; }
+  if (!/^0\d{9,10}$/.test(phone))     { showToast('올바른 연락처를 입력해 주세요. (예: 01012345678)', 'error'); return; }
+  if (!/^\d{4}$/.test(pin))           { showToast('취소비번은 숫자 4자리입니다.', 'error'); return; }
+
+  const btn = document.getElementById('r-submit-btn');
+  btn.disabled = true; btn.textContent = '신청 중…';
+
+  try {
+    const { data, error } = await sbClient.rpc('confirm_enrollment', {
+      p_rid:    currentRid,
+      p_school: schoolCode,
+      p_stno:   stno,
+      p_name:   name,
+      p_phone:  phone,
+      p_pin:    pin
     });
     if (error) throw error;
 
-    if (data.ok) {
-      closeApplyModal();
-      showToast('✅ 수강신청이 완료되었습니다!', 'ok');
-      loadCourses();
-    } else {
+    if (!data.ok) {
       const msgs = {
-        duplicate:       '이미 신청하셨습니다. (1인 1강좌)',
-        full:            '방금 마감되었습니다. 다른 강좌를 신청해 주세요.',
-        not_open:        '수강신청 기간이 아닙니다.',
-        between_periods: '1차 신청기간이 종료되었습니다. 2차 신청을 이용해 주세요.',
-        period_closed:   '신청기간이 종료되었습니다.',
-        not_registerable:'신청 불가 강좌입니다.',
+        reservation_notfound: '예약 정보를 찾을 수 없습니다. 다시 시도해 주세요.',
+        reservation_expired:  '시간이 초과되었습니다. 다시 신청해 주세요.',
+        duplicate:            '이미 신청하셨습니다. (학번 또는 연락처 중복)'
       };
-      showToast(msgs[data.error] || `오류: ${data.error}`, 'err');
-      applyLocked = false;
-      btn.disabled = false;
-      btn.textContent = '신청하기';
+      showToast(msgs[data.error] || '신청 실패: ' + data.error, 'error');
+      btn.disabled = false; btn.textContent = '신청 완료';
+      return;
     }
+
+    // Success
+    clearInterval(reserveInterval);
+    reservationConfirmed = true;
+
+    const cname = (courses.find(c => c.code === currentCode) || {}).name || currentCode;
+    document.getElementById('s-dl').innerHTML = `
+      <dt>강좌</dt><dd>${cname}</dd>
+      <dt>학교</dt><dd>${schoolName}</dd>
+      <dt>학번</dt><dd>${stno}</dd>
+      <dt>이름</dt><dd>${name}</dd>
+      <dt>연락처</dt><dd>${phone}</dd>
+    `;
+    document.getElementById('r-form-wrap').style.display = 'none';
+    document.getElementById('r-success').style.display = 'block';
+
   } catch(e) {
-    console.error(e);
-    showToast('서버 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.', 'err');
-    applyLocked = false;
-    btn.disabled = false;
-    btn.textContent = '신청하기';
+    console.error('confirm:', e);
+    showToast('서버 오류가 발생했습니다.', 'error');
+    btn.disabled = false; btn.textContent = '신청 완료';
   }
 }
 
-// ══════════════════════════════════════════
-// 내 신청 조회
-// ══════════════════════════════════════════
-async function checkMyEnrollment() {
-  const school = document.getElementById('my-school').value.trim();
-  const stno   = document.getElementById('my-stno').value.trim();
-  const phone  = document.getElementById('my-phone').value.trim();
+// ── Detail modal ──
+function openDetailModal(code) {
+  const c = courses.find(x => x.code === code);
+  const d = DETAIL_MAP[code];
+  if (!d) return;
 
-  if (!school || !stno || !phone) {
-    showToast('학교·학번·휴대폰을 모두 입력해 주세요.', 'err'); return;
+  detailCode = code;
+  document.getElementById('d-title').textContent = c?.name || code;
+
+  // Seats
+  let seatsHtml = '';
+  if (c) {
+    if (!c.is_registerable) seatsHtml = '<span style="color:var(--g400);font-weight:700">보령시 별도 모집 강좌</span>';
+    else if (c.is_full)     seatsHtml = '<span style="color:var(--red);font-weight:700">마감되었습니다</span>';
+    else                    seatsHtml = `<span style="color:var(--mint);font-weight:700">잔여 ${c.remaining}석 / 정원 ${c.capacity}석</span>`;
+  }
+  document.getElementById('d-seats').innerHTML = seatsHtml;
+
+  const rows = [
+    ['분야',     d.field || '-'],
+    ['대상',     d.target || '-'],
+    ['기간',     d.period || '-'],
+    ['장소',     d.place || '-'],
+    ['수업방식', d.method || '-'],
+    ['준비물',   d.supply || '없음'],
+  ];
+  document.getElementById('d-table').innerHTML =
+    rows.map(([th,td]) => `<tr><th>${th}</th><td>${td}</td></tr>`).join('');
+  document.getElementById('d-intro').textContent = d.intro || '';
+
+  // Apply button
+  const ab = document.getElementById('d-apply-btn');
+  ab.disabled = false;
+  ab.textContent = '신청하기';
+  if (!c || !c.is_registerable) {
+    ab.textContent = '신청 불가 (별도 모집)';
+    ab.disabled = true;
+  } else if (c.is_full) {
+    ab.textContent = '마감되었습니다';
+    ab.disabled = true;
+  } else if (!isOpen) {
+    ab.textContent = '신청 기간이 아닙니다';
+    ab.disabled = true;
   }
 
-  const btn = document.getElementById('my-check-btn');
-  btn.disabled = true;
-  btn.textContent = '조회 중...';
+  document.getElementById('detail-modal').style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+}
+
+function closeDetailModal() {
+  document.getElementById('detail-modal').style.display = 'none';
+  document.body.style.overflow = '';
+  detailCode = null;
+}
+
+function applyFromDetail() {
+  const code = detailCode;
+  closeDetailModal();
+  if (!code) return;
+  // Create a fake button element as placeholder
+  const fakeBtn = { disabled: false, textContent: '신청하기' };
+  openReserveModal(code, null);
+}
+
+// ── My enrollment ──
+async function checkMyEnrollment() {
+  const schoolCode = document.getElementById('my-school-code').value;
+  const stno       = buildStno('my-grade', 'my-cls', 'my-num');
+  const phone      = document.getElementById('my-phone').value.replace(/\D/g, '');
+
+  if (!schoolCode) { showToast('학교를 목록에서 선택해 주세요.', 'error'); return; }
+  if (!stno)       { showToast('학번(학년·반·번호)을 모두 선택해 주세요.', 'error'); return; }
+  if (!phone)      { showToast('연락처를 입력해 주세요.', 'error'); return; }
+
+  const btn = document.getElementById('my-search-btn');
+  btn.disabled = true; btn.textContent = '조회 중…';
+
+  const resultEl  = document.getElementById('my-result');
+  const cancelEl  = document.getElementById('my-cancel-panel');
 
   try {
     const { data, error } = await sbClient.rpc('get_my_enrollment', {
-      p_school:     school,
+      p_school:     schoolCode,
       p_student_no: stno,
-      p_phone:      phone,
+      p_phone:      phone
     });
     if (error) throw error;
 
-    if (data.ok) {
-      myData = data;
-      document.getElementById('my-code').textContent  = data.course_code;
-      document.getElementById('my-cname').textContent = data.course_name;
-      document.getElementById('my-time').textContent  =
-        new Date(data.created_at).toLocaleString('ko-KR', {timeZone:'Asia/Seoul'});
-      document.getElementById('my-status').textContent = data.status === 'active' ? '✅ 신청 완료' : '취소됨';
-      document.getElementById('my-cancel-btn').style.display = data.status === 'active' ? '' : 'none';
-      document.getElementById('my-result').style.display = '';
+    resultEl.style.display = 'block';
+
+    if (!data || !data.ok) {
+      resultEl.innerHTML = `<div class="panel"><p style="color:var(--g400);font-size:14px">신청 내역이 없습니다.</p></div>`;
+      cancelEl.style.display = 'none';
     } else {
-      document.getElementById('my-result').style.display = 'none';
-      const msgs = { notfound: '신청 내역이 없습니다.' };
-      showToast(msgs[data.error] || '조회 실패: ' + data.error, 'err');
+      const cname = (courses.find(c => c.code === data.course_code) || {}).name || data.course_code;
+      const d     = DETAIL_MAP[data.course_code] || {};
+      const sname = (SCHOOL_MAP[schoolCode] || {}).name || schoolCode;
+      const sLabel = data.status === 'active' ? '신청 완료' : data.status === 'cancelled' ? '취소됨' : data.status;
+      const sCls   = data.status === 'active' ? 's-active' : 's-cancelled';
+      const created = data.created_at
+        ? new Date(data.created_at).toLocaleString('ko-KR', {timeZone:'Asia/Seoul'})
+        : '';
+
+      resultEl.innerHTML = `
+        <div class="panel">
+          <div class="result-card">
+            <div class="rc-name">${cname}<span class="status-badge ${sCls}">${sLabel}</span></div>
+            <div class="rc-meta">
+              📅 ${d.period || ''}<br>
+              📍 ${(d.place || '').split('(')[0].trim()}<br>
+              학교: ${sname} / 학번: ${stno}<br>
+              ${created ? `신청일시: ${created}` : ''}
+            </div>
+          </div>
+        </div>`;
+
+      if (data.status === 'active') {
+        cancelEl.style.display = 'block';
+        document.getElementById('my-pin').value = '';
+      } else {
+        cancelEl.style.display = 'none';
+      }
     }
   } catch(e) {
-    console.error(e);
-    showToast('서버 오류가 발생했습니다.', 'err');
-  } finally {
-    btn.disabled = false;
-    btn.textContent = '조회';
+    console.error('checkMyEnrollment:', e);
+    showToast('조회 중 오류가 발생했습니다.', 'error');
+    resultEl.style.display = 'none';
+    cancelEl.style.display = 'none';
   }
+
+  btn.disabled = false; btn.textContent = '조회하기';
 }
 
-// ══════════════════════════════════════════
-// 신청 취소
-// ══════════════════════════════════════════
 async function cancelEnrollment() {
-  if (!confirm('정말 취소하시겠습니까?\n취소 후 재신청 시 자리가 남아있어야 합니다.')) return;
+  const schoolCode = document.getElementById('my-school-code').value;
+  const stno       = buildStno('my-grade', 'my-cls', 'my-num');
+  const phone      = document.getElementById('my-phone').value.replace(/\D/g, '');
+  const pin        = document.getElementById('my-pin').value.trim();
 
-  const school = document.getElementById('my-school').value.trim();
-  const stno   = document.getElementById('my-stno').value.trim();
-  const phone  = document.getElementById('my-phone').value.trim();
-
-  const btn = document.getElementById('my-cancel-btn');
-  btn.disabled = true;
-  btn.textContent = '처리 중...';
+  if (!/^\d{4}$/.test(pin)) { showToast('취소비번 4자리를 입력해 주세요.', 'error'); return; }
+  if (!confirm('정말 취소하시겠습니까?')) return;
 
   try {
     const { data, error } = await sbClient.rpc('cancel_enrollment', {
-      p_school:     school,
-      p_student_no: stno,
-      p_phone:      phone,
+      p_school: schoolCode,
+      p_stno:   stno,
+      p_phone:  phone,
+      p_pin:    pin
     });
     if (error) throw error;
 
-    if (data.ok) {
-      showToast('취소되었습니다.', 'ok');
-      document.getElementById('my-result').style.display = 'none';
-      loadCourses();
-    } else {
+    if (!data.ok) {
       const msgs = {
-        notfound:      '신청 내역이 없거나 정보가 일치하지 않습니다.',
-        period_closed: '신청기간이 종료되어 취소할 수 없습니다.',
+        notfound_or_wrong_pin: '취소비번이 틀리거나 신청 내역을 찾을 수 없습니다.',
+        period_closed:         '취소 기간이 지났습니다.'
       };
-      showToast(msgs[data.error] || '취소 실패: ' + data.error, 'err');
-      btn.disabled = false;
-      btn.textContent = '신청 취소';
+      showToast(msgs[data.error] || '취소 실패: ' + data.error, 'error');
+      return;
     }
+
+    showToast('취소되었습니다.', 'success');
+    document.getElementById('my-result').innerHTML = '';
+    document.getElementById('my-result').style.display = 'none';
+    document.getElementById('my-cancel-panel').style.display = 'none';
+    await loadCourses();
   } catch(e) {
-    console.error(e);
-    showToast('서버 오류가 발생했습니다.', 'err');
-    btn.disabled = false;
-    btn.textContent = '신청 취소';
+    console.error('cancel:', e);
+    showToast('서버 오류가 발생했습니다.', 'error');
   }
 }
 
-// ══════════════════════════════════════════
-// 탭 전환
-// ══════════════════════════════════════════
-document.querySelectorAll('.tab-btn').forEach(btn => {
-  btn.addEventListener('click', function() {
-    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('on'));
-    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-    this.classList.add('on');
-    const id = 'tab-' + this.dataset.tab;
-    document.getElementById(id).classList.add('active');
-    document.getElementById('filter-bar').style.display = this.dataset.tab === 'list' ? '' : 'none';
+// ── Tabs ──
+function switchTab(tab) {
+  ['courses', 'my'].forEach(t => {
+    document.getElementById('tab-' + t).style.display = t === tab ? '' : 'none';
+    document.getElementById('tbn-' + t).classList.toggle('active', t === tab);
   });
-});
-
-// ══════════════════════════════════════════
-// 검색/필터
-// ══════════════════════════════════════════
-document.getElementById('search-input').addEventListener('input', renderGrid);
-document.getElementById('region-filter').addEventListener('change', renderGrid);
-
-// ══════════════════════════════════════════
-// 토스트
-// ══════════════════════════════════════════
-let toastTimer;
-function showToast(msg, type='') {
-  const el = document.getElementById('toast');
-  el.textContent  = msg;
-  el.className    = 'show ' + type;
-  clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => el.className='', 3500);
 }
 
-// ══════════════════════════════════════════
-// 초기화
-// ══════════════════════════════════════════
-if (sbClient) startPolling();
+// ── Backdrop click ──
+function onBackdropClick(e, modalId) {
+  if (e.target.id === modalId) {
+    if (modalId === 'reserve-modal') closeReserveModal();
+    if (modalId === 'detail-modal')  closeDetailModal();
+  }
+}
+
+// ── Toast ──
+let toastTimer;
+function showToast(msg, type = '') {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.className = 'toast show' + (type ? ' ' + type : '');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove('show'), 3500);
+}
+
+// ── Polling ──
+function startPolling() {
+  const interval = 12000 + Math.random() * 6000;
+  setTimeout(async function loop() {
+    await loadOpenStatus();
+    await loadCourses();
+    setTimeout(loop, interval);
+  }, interval);
+}
+
+// ── ESC key ──
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    if (document.getElementById('reserve-modal').style.display !== 'none') closeReserveModal();
+    if (document.getElementById('detail-modal').style.display  !== 'none') closeDetailModal();
+  }
+});
+
+// ── Start ──
+init();
 </script>
 </body>
 </html>
