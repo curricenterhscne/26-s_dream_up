@@ -47,7 +47,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--g50);color:var(--tex
 /* ── 오픈 후 상태 배지 ── */
 #open-badge{display:none;background:var(--mint);color:#fff;
   border-radius:24px;padding:8px 20px;font-size:13px;font-weight:700;
-  display:inline-flex;align-items:center;gap:6px;margin-bottom:12px}
+  align-items:center;gap:6px;margin-bottom:12px}
 #open-badge.visible{display:inline-flex}
 .pulse-dot{width:8px;height:8px;border-radius:50%;background:#fff;
   animation:pulse 1.2s ease-in-out infinite}
@@ -363,9 +363,10 @@ const SUPABASE_URL      = 'https://yhrgvnttjlitukrxdfdo.supabase.co';  // 예: h
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inlocmd2bnR0amxpdHVrcnhkZmRvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIyMDYzNDAsImV4cCI6MjA5Nzc4MjM0MH0.FKtEr-59H1hl1Aucb-x1MFQkAC--ylV0BEX5gg1lpg8';  // Supabase → Project Settings → API → anon/public key
 // ══════════════════════════════════════════════════════════════
 
-// open_at (KST) — 카운트다운 표시용 클라이언트 참조값.
-// 실제 오픈 판정은 서버(RPC) 기준. 이 값은 UI 전환에만 사용.
-const OPEN_AT_KST = new Date('2026-06-25T18:00:00+09:00');
+// open_at — 서버에서 받아온 값으로 덮어씀 (get_open_status)
+// 초기값은 실제 오픈 시각 (서버 응답 전 카운트다운 표시용 fallback)
+let openAt        = new Date('2026-06-25T18:00:00+09:00');
+let serverTimeDiff = 0;  // 서버·클라이언트 시각 오프셋(ms)
 
 // ── 지역 색상 (기존 index.html 토큰 이식) ──
 const REGION_COLORS = {
@@ -400,20 +401,37 @@ let applyLocked = false;    // 더블서밋 방지
 let myData      = null;     // 내 신청 내역
 
 // ══════════════════════════════════════════
-// 카운트다운
+// 서버 오픈 상태 조회 (get_open_status RPC)
+// ══════════════════════════════════════════
+async function loadOpenStatus() {
+  if (!sbClient) return;
+  try {
+    const { data, error } = await sbClient.rpc('get_open_status');
+    if (error) throw error;
+    openAt         = new Date(data.open_at);
+    serverTimeDiff = new Date(data.server_now).getTime() - Date.now();
+    isOpen         = data.is_open;
+  } catch(e) {
+    console.warn('get_open_status 실패, 클라이언트 시각으로 대체:', e);
+    // fallback: 클라이언트 시각 기준
+    isOpen = Date.now() >= openAt.getTime();
+  }
+}
+
+// ══════════════════════════════════════════
+// 카운트다운 (1초마다 갱신 — 서버 openAt 기준)
 // ══════════════════════════════════════════
 function updateCountdown() {
-  const now  = Date.now();
-  const diff = OPEN_AT_KST.getTime() - now;
-  if (diff <= 0) {
+  const serverNow = Date.now() + serverTimeDiff;
+  const diff      = openAt.getTime() - serverNow;
+
+  if (isOpen || diff <= 0) {
     document.getElementById('countdown-banner').classList.remove('visible');
     document.getElementById('open-badge').classList.add('visible');
-    isOpen = true;
     return;
   }
   document.getElementById('countdown-banner').classList.add('visible');
   document.getElementById('open-badge').classList.remove('visible');
-  isOpen = false;
 
   const d = Math.floor(diff / 86400000);
   const h = Math.floor((diff % 86400000) / 3600000);
@@ -432,7 +450,7 @@ updateCountdown();
 // 강좌 목록 로딩 (폴링)
 // ══════════════════════════════════════════
 async function loadCourses() {
-  if (!supabase) return;
+  if (!sbClient) return;
   try {
     const { data, error } = await sbClient.rpc('get_course_status');
     if (error) throw error;
@@ -453,10 +471,16 @@ function updatePollStatus() {
 }
 
 function startPolling() {
-  loadCourses();
+  // 오픈 상태 먼저 조회 → 카운트다운/버튼 즉시 갱신
+  loadOpenStatus().then(() => {
+    updateCountdown();
+    loadCourses();
+  });
   // 10~15초 무작위 지터 (§11-4 권고)
   const jitter = 10000 + Math.random() * 5000;
-  pollTimer = setTimeout(function loop() {
+  pollTimer = setTimeout(async function loop() {
+    await loadOpenStatus();
+    updateCountdown();
     loadCourses();
     pollTimer = setTimeout(loop, jitter);
   }, jitter);
