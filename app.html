@@ -376,14 +376,14 @@ const REGION_COLORS = {
 // ══════════════════════════════════════════
 // Supabase 초기화
 // ══════════════════════════════════════════
-let supabase;
+let sbClient;
 try {
   if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
     document.body.innerHTML = '<div style="padding:40px;text-align:center;font-family:sans-serif">' +
       '<h2 style="color:#dc2626">설정 필요</h2>' +
       '<p style="margin-top:12px;color:#555">app.html의 SUPABASE_URL과 SUPABASE_ANON_KEY를 입력해 주세요.</p></div>';
   } else {
-    supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    sbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
   }
 } catch(e) {
   console.error('Supabase 초기화 실패', e);
@@ -392,7 +392,7 @@ try {
 // ══════════════════════════════════════════
 // 상태
 // ══════════════════════════════════════════
-let courses     = [];       // get_course_status() 결과
+let courses     = [];       // sbClient.rpc('get_course_status') 결과
 let isOpen      = false;    // 수강신청 기간 여부
 let pollTimer   = null;
 let selectedCode = null;    // 현재 신청 모달에 열린 강좌 코드
@@ -434,7 +434,7 @@ updateCountdown();
 async function loadCourses() {
   if (!supabase) return;
   try {
-    const { data, error } = await supabase.rpc('get_course_status');
+    const { data, error } = await sbClient.rpc('get_course_status');
     if (error) throw error;
     courses = data || [];
     renderGrid();
@@ -603,7 +603,7 @@ async function submitApply() {
   btn.innerHTML = '<span class="spinner"></span> 처리 중...';
 
   try {
-    const { data, error } = await supabase.rpc('apply_course', {
+    const { data, error } = await sbClient.rpc('apply_course', {
       p_code:       selectedCode,
       p_school:     school,
       p_student_no: stno,
@@ -656,7 +656,7 @@ async function checkMyEnrollment() {
   btn.textContent = '조회 중...';
 
   try {
-    const { data, error } = await supabase.rpc('get_my_enrollment', {
+    const { data, error } = await sbClient.rpc('get_my_enrollment', {
       p_school:     school,
       p_student_no: stno,
       p_phone:      phone,
@@ -701,7 +701,7 @@ async function cancelEnrollment() {
   btn.textContent = '처리 중...';
 
   try {
-    const { data, error } = await supabase.rpc('cancel_enrollment', {
+    const { data, error } = await sbClient.rpc('cancel_enrollment', {
       p_school:     school,
       p_student_no: stno,
       p_phone:      phone,
@@ -764,7 +764,7 @@ function showToast(msg, type='') {
 // ══════════════════════════════════════════
 // 초기화
 // ══════════════════════════════════════════
-if (supabase) startPolling();
+if (sbClient) startPolling();
 </script>
 </body>
 </html>
