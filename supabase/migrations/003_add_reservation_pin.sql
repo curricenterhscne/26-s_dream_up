@@ -16,7 +16,8 @@ CREATE TABLE IF NOT EXISTS schools (
 );
 ALTER TABLE schools ENABLE ROW LEVEL SECURITY;
 -- 개인정보 없으므로 anon 직접 SELECT 허용
-CREATE POLICY IF NOT EXISTS schools_read ON schools FOR SELECT USING (true);
+DROP POLICY IF EXISTS schools_read ON schools;
+CREATE POLICY schools_read ON schools FOR SELECT USING (true);
 
 -- ──────────────────────────────────────────
 -- 2. enrollments 스키마 변경
