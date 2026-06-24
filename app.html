@@ -448,7 +448,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--g50);color:var(--tex
     </div>
     <div class="modal-body">
       <!-- timer -->
-      <div class="timer-section">
+      <div class="timer-section" id="r-timer-section">
         <div class="timer-hint">⏱ 좌석이 임시 확보되었습니다. <b>3분</b> 안에 아래 정보를 입력하고 [신청 완료]를 눌러주세요.</div>
         <div class="timer-row">
           <div class="timer-num" id="timer-num">30</div>
@@ -1019,6 +1019,7 @@ async function submitConfirm() {
       <dt>연락처</dt><dd>${phone}</dd>
     `;
     document.getElementById('r-form-wrap').style.display = 'none';
+    document.getElementById('r-timer-section').style.display = 'none';
     document.getElementById('r-success').style.display = 'block';
 
   } catch(e) {
