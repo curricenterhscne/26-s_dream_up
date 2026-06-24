@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-<title>2026 여름방학 꿈키움 수강신청</title>
+<title>2026 여름방학 꿈키움 학교 밖 교육 강좌 안내</title>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23152460'/%3E%3Ctext x='16' y='23' text-anchor='middle' font-size='20'%3E🌱%3C/text%3E%3C/svg%3E"/>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;900&family=Noto+Serif+KR:wght@600;700&display=swap" rel="stylesheet"/>
@@ -223,6 +223,24 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--g50);color:var(--tex
 .toast.error{background:var(--red)}
 .toast.show{opacity:1}
 
+/* ── Detail modal header (index.html 스타일) ── */
+.d-mh{padding:20px 22px 16px;position:relative;border-radius:var(--r) var(--r) 0 0;color:#fff;flex-shrink:0}
+.d-mh-top{display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap}
+.d-region{border-radius:12px;padding:3px 10px;font-size:11px;font-weight:800;letter-spacing:.3px;background:rgba(255,255,255,.92)}
+.d-code{background:rgba(255,255,255,.22);color:rgba(255,255,255,.92);font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;letter-spacing:.5px;font-family:monospace}
+.d-inst{font-size:11px;color:rgba(255,255,255,.65);margin-bottom:3px}
+.d-title{font-family:'Noto Serif KR',serif;font-size:17px;font-weight:700;line-height:1.35;margin-bottom:9px}
+.d-ftags{display:flex;flex-wrap:wrap;gap:5px}
+.d-ftag{font-size:11px;padding:3px 10px;border-radius:10px;background:rgba(255,255,255,.22);color:rgba(255,255,255,.95);font-weight:600}
+.d-stitle{font-size:11px;font-weight:700;color:var(--navy);padding:4px 10px;background:var(--sky);border-left:4px solid var(--navy);border-radius:0 7px 7px 0;margin:14px 0 9px;letter-spacing:.3px}
+.d-igrid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:4px}
+.d-iitem{background:var(--g50);border-radius:8px;padding:8px 12px}
+.d-iitem-full{grid-column:1/-1}
+.d-ilabel{font-size:10px;font-weight:700;color:var(--g400);margin-bottom:2px;letter-spacing:.3px}
+.d-ival{font-size:12px;color:var(--text);white-space:pre-line;line-height:1.55}
+.d-ibox{background:var(--sky);border-radius:10px;padding:12px 15px;font-size:13px;color:var(--navy);line-height:1.7;font-weight:500;margin-bottom:4px}
+.d-seats-row{font-size:13px;font-weight:700;margin:10px 0 12px}
+
 /* ── Responsive ── */
 @media(max-width:500px){
   #course-grid{grid-template-columns:1fr}
@@ -237,13 +255,13 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--g50);color:var(--tex
 <!-- ══ Hero ══ -->
 <header class="hero">
   <div class="hero-in">
-    <div class="hero-badge">2026 여름방학 꿈키움 대학탐방</div>
-    <h1>수강신청</h1>
-    <p>충청남도 고등학생 대상 선착순 대학 탐방 프로그램</p>
+    <div class="hero-badge">충청남도교육청</div>
+    <h1>2026학년도 여름방학<br>꿈키움 학교 밖 교육<br>창의적체험활동 강좌 안내</h1>
+    <p>충남 관내 고등학생을 위한 대학 연계 창의적 체험활동 프로그램입니다.<br>원하는 강좌의 [신청하기]를 눌러 수강신청하세요.</p>
     <div class="hero-stats">
       <div class="hero-stat"><div class="val">89</div><div class="lbl">개 강좌</div></div>
-      <div class="hero-stat"><div class="val">15</div><div class="lbl">강좌당 정원</div></div>
-      <div class="hero-stat"><div class="val" id="total-remaining">-</div><div class="lbl">남은 좌석</div></div>
+      <div class="hero-stat"><div class="val">20</div><div class="lbl">개 대학</div></div>
+      <div class="hero-stat"><div class="val">8</div><div class="lbl">개 시·군</div></div>
     </div>
   </div>
 </header>
@@ -260,8 +278,8 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--g50);color:var(--tex
       </div>
       <div class="guide-step">
         <div class="step-num">2</div>
-        <div class="step-title">30초 안에 입력</div>
-        <div class="step-desc">좌석이 임시 확보됩니다. <b>30초</b> 안에 학교·학번·이름·연락처·취소비번을 입력하세요.</div>
+        <div class="step-title">3분 안에 입력</div>
+        <div class="step-desc">좌석이 임시 확보됩니다. <b>3분</b> 안에 학교·학번·이름·연락처·취소비번을 입력하세요.</div>
       </div>
       <div class="guide-step">
         <div class="step-num">3</div>
@@ -357,7 +375,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--g50);color:var(--tex
     <div class="modal-body">
       <!-- timer -->
       <div class="timer-section">
-        <div class="timer-hint">⏱ 좌석이 임시 확보되었습니다. <b>30초</b> 안에 아래 정보를 입력하고 [신청 완료]를 눌러주세요.</div>
+        <div class="timer-hint">⏱ 좌석이 임시 확보되었습니다. <b>3분</b> 안에 아래 정보를 입력하고 [신청 완료]를 눌러주세요.</div>
         <div class="timer-row">
           <div class="timer-num" id="timer-num">30</div>
           <div class="timer-bar-wrap">
@@ -422,16 +440,8 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--g50);color:var(--tex
 <!-- ══ Detail Modal ══ -->
 <div id="detail-modal" class="backdrop" style="display:none" onclick="onBackdropClick(event,'detail-modal')">
   <div class="modal">
-    <div class="modal-head">
-      <h3 id="d-title">강좌 상세</h3>
-      <button class="btn-close" onclick="closeDetailModal()">✕</button>
-    </div>
-    <div class="modal-body">
-      <div class="detail-seats" id="d-seats"></div>
-      <table class="detail-tbl" id="d-table"></table>
-      <div class="detail-intro" id="d-intro"></div>
-      <button class="btn-primary" id="d-apply-btn" onclick="applyFromDetail()">신청하기</button>
-    </div>
+    <div id="d-head" class="d-mh"></div>
+    <div class="modal-body" id="d-body"></div>
   </div>
 </div>
 
@@ -450,6 +460,13 @@ const SCHOOL_MAP = {};
 SCHOOLS.forEach(s => SCHOOL_MAP[s.code] = s);
 const DETAIL_MAP = {};
 COURSE_DETAILS.forEach(d => DETAIL_MAP[d.code] = d);
+
+// ── Region colors (index.html 기준) ──
+const REGION_COLORS = {
+  "천안":"#1a5276","아산":"#117a65","공주":"#7d6608","당진":"#145a7c",
+  "홍성":"#7d6608","금산":"#922b21","논산계룡":"#6e2f8c","서천":"#1b6b5a",
+  "보령":"#117a65","예산":"#7d6608","태안":"#145a7c","부여":"#6e2f8c"
+};
 
 // ── State ──
 let sbClient;
@@ -517,9 +534,19 @@ function initSchoolSearch(inputId, codeId, ddId) {
   const dd   = document.getElementById(ddId);
   if (!inp) return;
 
-  inp.addEventListener('input', () => {
-    code.value = '';
-    const q = inp.value.trim();
+  function getItems()   { return Array.from(dd.querySelectorAll('li')); }
+  function getFocused() { return dd.querySelector('li.focused'); }
+  function setFocus(li) {
+    getItems().forEach(x => x.classList.remove('focused'));
+    if (li) { li.classList.add('focused'); li.scrollIntoView({block:'nearest'}); }
+  }
+  function selectItem(li) {
+    inp.value  = li.dataset.name;
+    code.value = li.dataset.code;
+    dd.style.display = 'none';
+    inp.focus();
+  }
+  function showDropdown(q) {
     if (!q) { dd.style.display = 'none'; return; }
     const hits = SCHOOLS.filter(s => s.name.includes(q)).slice(0, 10);
     if (!hits.length) { dd.style.display = 'none'; return; }
@@ -527,15 +554,39 @@ function initSchoolSearch(inputId, codeId, ddId) {
       `<li data-code="${s.code}" data-name="${s.name.replace(/"/g,'&quot;')}">${s.name}<span class="s-region">${s.region}</span></li>`
     ).join('');
     dd.style.display = 'block';
+  }
+
+  inp.addEventListener('input', () => {
+    code.value = '';
+    showDropdown(inp.value.trim());
+  });
+
+  inp.addEventListener('keydown', e => {
+    const items = getItems();
+    if (!items.length && e.key !== 'Escape') return;
+    if (e.key === 'ArrowDown' || (e.key === 'Tab' && !e.shiftKey && dd.style.display !== 'none')) {
+      e.preventDefault();
+      const focused = getFocused();
+      const idx = focused ? items.indexOf(focused) : -1;
+      setFocus(items[(idx + 1) % items.length] || items[0]);
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      const focused = getFocused();
+      const idx = focused ? items.indexOf(focused) : items.length;
+      setFocus(items[(idx - 1 + items.length) % items.length]);
+    } else if (e.key === 'Enter') {
+      const focused = getFocused();
+      if (focused && dd.style.display !== 'none') { e.preventDefault(); selectItem(focused); }
+    } else if (e.key === 'Escape') {
+      dd.style.display = 'none';
+    }
   });
 
   dd.addEventListener('mousedown', e => {
     const li = e.target.closest('li');
     if (!li) return;
     e.preventDefault();
-    inp.value  = li.dataset.name;
-    code.value = li.dataset.code;
-    dd.style.display = 'none';
+    selectItem(li);
   });
 
   inp.addEventListener('blur', () => setTimeout(() => { dd.style.display = 'none'; }, 200));
@@ -612,8 +663,6 @@ async function loadCourses() {
     const { data, error } = await sbClient.rpc('get_course_status');
     if (error) throw error;
     courses = data || [];
-    const total = courses.reduce((s, c) => s + (c.remaining || 0), 0);
-    document.getElementById('total-remaining').textContent = total.toLocaleString();
     const ts = new Date();
     document.getElementById('poll-ts').textContent =
       `${String(ts.getHours()).padStart(2,'0')}:${String(ts.getMinutes()).padStart(2,'0')} 갱신`;
@@ -738,7 +787,7 @@ function reserveErrMsg(err) {
 
 function startReserveTimer(expiresAt) {
   const endMs   = new Date(expiresAt).getTime();
-  const totalSec = 30;
+  const totalSec = 180;
 
   function tick() {
     const now  = Date.now() + serverTimeDiff;
@@ -872,45 +921,63 @@ function openDetailModal(code) {
   const c = courses.find(x => x.code === code);
   const d = DETAIL_MAP[code];
   if (!d) return;
-
   detailCode = code;
-  document.getElementById('d-title').textContent = c?.name || code;
 
-  // Seats
+  const region = c?.region || '';
+  const color  = REGION_COLORS[region] || '#152460';
+  const fields = d.field ? d.field.split(' · ') : [];
+  const org    = c?.org || '';
+
+  // ── 컬러 헤더 ──
+  const head = document.getElementById('d-head');
+  head.style.background = `linear-gradient(135deg,${color}f0 0%,${color} 100%)`;
+  head.innerHTML = `
+    <button class="btn-close" style="position:absolute;top:11px;right:12px;color:#fff;background:rgba(255,255,255,.18);border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center" onclick="closeDetailModal()">✕</button>
+    <div class="d-mh-top">
+      ${region?`<span class="d-region" style="color:${color}">● ${region}</span>`:''}
+      <span class="d-code">${code}</span>
+    </div>
+    ${org?`<div class="d-inst">${org}</div>`:''}
+    <div class="d-title">${c?.name||code}</div>
+    ${fields.length?`<div class="d-ftags">${fields.map(f=>`<span class="d-ftag">${f}</span>`).join('')}</div>`:''}
+  `;
+
+  // ── 좌석 현황 ──
   let seatsHtml = '';
   if (c) {
-    if (!c.is_registerable) seatsHtml = '<span style="color:var(--g400);font-weight:700">보령시 별도 모집 강좌</span>';
-    else if (c.is_full)     seatsHtml = '<span style="color:var(--red);font-weight:700">마감되었습니다</span>';
-    else                    seatsHtml = `<span style="color:var(--mint);font-weight:700">잔여 ${c.remaining}석 / 정원 ${c.capacity}석</span>`;
+    if (!c.is_registerable) seatsHtml = `<div class="d-seats-row" style="color:var(--g400)">⚠️ 보령시 소재 학교 별도 모집 강좌입니다</div>`;
+    else if (c.is_full)     seatsHtml = `<div class="d-seats-row" style="color:var(--red)">🔴 마감되었습니다</div>`;
+    else                    seatsHtml = `<div class="d-seats-row" style="color:var(--mint)">🟢 잔여 ${c.remaining}석 · 정원 ${c.capacity}석</div>`;
   }
-  document.getElementById('d-seats').innerHTML = seatsHtml;
 
-  const rows = [
-    ['분야',     d.field || '-'],
-    ['대상',     d.target || '-'],
-    ['기간',     d.period || '-'],
-    ['장소',     d.place || '-'],
-    ['수업방식', d.method || '-'],
-    ['준비물',   d.supply || '없음'],
+  // ── 신청 버튼 ──
+  let btnDisabled = false, btnTxt = '신청하기';
+  if (!c||!c.is_registerable){btnTxt='신청 불가 (별도 모집)';btnDisabled=true;}
+  else if(c.is_full)          {btnTxt='마감되었습니다';btnDisabled=true;}
+  else if(!isOpen)            {btnTxt='신청 기간이 아닙니다';btnDisabled=true;}
+
+  // ── 기본 정보 그리드 ──
+  const infoRows = [
+    ['운영 대상', d.target,         false],
+    ['수업 방식', d.method,         false],
+    ['운영 기간', d.period,         true],
+    ['수업 장소', d.place,          true],
+    ...(d.supply?[['준비물',        d.supply, true]]:[]),
   ];
-  document.getElementById('d-table').innerHTML =
-    rows.map(([th,td]) => `<tr><th>${th}</th><td>${td}</td></tr>`).join('');
-  document.getElementById('d-intro').textContent = d.intro || '';
+  const infoHtml = `<div class="d-igrid">${
+    infoRows.filter(([,v])=>v).map(([lbl,val,full])=>
+      `<div class="d-iitem${full?' d-iitem-full':''}"><div class="d-ilabel">${lbl}</div><div class="d-ival">${val}</div></div>`
+    ).join('')
+  }</div>`;
 
-  // Apply button
-  const ab = document.getElementById('d-apply-btn');
-  ab.disabled = false;
-  ab.textContent = '신청하기';
-  if (!c || !c.is_registerable) {
-    ab.textContent = '신청 불가 (별도 모집)';
-    ab.disabled = true;
-  } else if (c.is_full) {
-    ab.textContent = '마감되었습니다';
-    ab.disabled = true;
-  } else if (!isOpen) {
-    ab.textContent = '신청 기간이 아닙니다';
-    ab.disabled = true;
-  }
+  // ── 바디 렌더링 ──
+  document.getElementById('d-body').innerHTML = `
+    ${d.intro?`<div class="d-ibox">${d.intro}</div>`:''}
+    <div class="d-stitle">📋 강좌 기본 정보</div>
+    ${infoHtml}
+    ${seatsHtml}
+    <button class="btn-primary" id="d-apply-btn" ${btnDisabled?'disabled':''} onclick="applyFromDetail()">${btnTxt}</button>
+  `;
 
   document.getElementById('detail-modal').style.display = 'flex';
   document.body.style.overflow = 'hidden';

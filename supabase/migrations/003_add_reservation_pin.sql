@@ -67,7 +67,7 @@ BEGIN
            c.enrolled_count
            - (SELECT count(*) FROM exp WHERE exp.course_code = c.code),
            0)
-   WHERE code IN (SELECT DISTINCT course_code FROM exp);
+   WHERE c.code IN (SELECT DISTINCT course_code FROM exp);
 
   RETURN QUERY
   SELECT
@@ -92,7 +92,7 @@ RETURNS jsonb
 LANGUAGE plpgsql SECURITY DEFINER AS $$
 DECLARE
   v_rid uuid        := gen_random_uuid();
-  v_exp timestamptz := now() + interval '30 seconds';
+  v_exp timestamptz := now() + interval '3 minutes';
   v_upd int;
   v_s   settings%ROWTYPE;
 BEGIN
