@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>꿈키움 관리자</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Noto Sans KR', sans-serif; background: #f0f2f5; color: #222; min-height: 100vh; }
+
+  /* Login */
+  #login-screen {
+    display: flex; align-items: center; justify-content: center;
+    min-height: 100vh;
+  }
+  .login-card {
+    background: #fff; border-radius: 12px; padding: 40px 36px;
+    box-shadow: 0 4px 24px rgba(0,0,0,.12); width: 340px; text-align: center;
+  }
+  .login-card h1 { font-size: 1.3rem; margin-bottom: 6px; }
+  .login-card p { color: #666; font-size: .9rem; margin-bottom: 24px; }
+  .login-card input {
+    width: 100%; padding: 10px 14px; border: 1px solid #ddd; border-radius: 8px;
+    font-size: 1rem; margin-bottom: 12px; outline: none;
+  }
+  .login-card input:focus { border-color: #4f6ef7; }
+  .login-card button {
+    width: 100%; padding: 11px; background: #4f6ef7; color: #fff;
+    border: none; border-radius: 8px; font-size: 1rem; cursor: pointer;
+  }
+  .login-card button:hover { background: #3b57e0; }
+  .login-error { color: #e53e3e; font-size: .85rem; margin-top: 8px; min-height: 20px; }
+
+  /* Dashboard */
+  #dashboard { display: none; }
+  header {
+    background: #fff; padding: 14px 24px;
+    display: flex; align-items: center; justify-content: space-between;
+    box-shadow: 0 1px 4px rgba(0,0,0,.08); position: sticky; top: 0; z-index: 100;
+  }
+  header h1 { font-size: 1.1rem; font-weight: 700; }
+  .header-actions { display: flex; gap: 8px; }
+  .btn {
+    padding: 7px 14px; border-radius: 7px; border: none; cursor: pointer;
+    font-size: .85rem; font-weight: 500;
+  }
+  .btn-primary { background: #4f6ef7; color: #fff; }
+  .btn-primary:hover { background: #3b57e0; }
+  .btn-outline { background: #fff; color: #444; border: 1px solid #ddd; }
+  .btn-outline:hover { background: #f5f5f5; }
+  .btn-danger { background: #fff; color: #e53e3e; border: 1px solid #fed7d7; }
+  .btn-danger:hover { background: #fff5f5; }
+  .btn-sm { padding: 4px 10px; font-size: .8rem; border-radius: 5px; }
+
+  main { padding: 20px 24px; max-width: 1400px; margin: 0 auto; }
+
+  /* Summary cards */
+  .summary-row { display: flex; gap: 16px; margin-bottom: 20px; flex-wrap: wrap; }
+  .card {
+    background: #fff; border-radius: 10px; padding: 18px 22px;
+    box-shadow: 0 1px 4px rgba(0,0,0,.06); flex: 1; min-width: 160px;
+  }
+  .card-label { font-size: .8rem; color: #888; margin-bottom: 6px; }
+  .card-value { font-size: 2rem; font-weight: 700; }
+  .card-value.red { color: #e53e3e; }
+  .card-value.yellow { color: #d97706; }
+
+  /* Table */
+  .table-wrap {
+    background: #fff; border-radius: 10px;
+    box-shadow: 0 1px 4px rgba(0,0,0,.06); overflow: hidden;
+  }
+  .table-toolbar {
+    padding: 14px 18px; display: flex; align-items: center; justify-content: space-between;
+    border-bottom: 1px solid #f0f0f0;
+  }
+  .table-toolbar span { font-size: .9rem; color: #555; }
+  table { width: 100%; border-collapse: collapse; font-size: .88rem; }
+  thead { background: #f8f9fb; }
+  th {
+    padding: 10px 12px; text-align: left; font-weight: 600;
+    color: #555; border-bottom: 1px solid #eee; white-space: nowrap;
+  }
+  td { padding: 9px 12px; border-bottom: 1px solid #f3f3f3; vertical-align: middle; }
+  tr:last-child td { border-bottom: none; }
+  tr.row-full { background: #fff5f5; }
+  tr.row-low { background: #fffbeb; }
+
+  /* Toggle button */
+  .toggle-btn {
+    padding: 4px 10px; border-radius: 12px; border: none; cursor: pointer;
+    font-size: .78rem; font-weight: 600; min-width: 52px;
+  }
+  .toggle-btn.on { background: #fed7d7; color: #c53030; }
+  .toggle-btn.off { background: #e2e8f0; color: #555; }
+
+  /* Capacity inline edit */
+  .cap-cell { display: flex; align-items: center; gap: 6px; }
+  .cap-input {
+    width: 52px; padding: 3px 7px; border: 1px solid #4f6ef7;
+    border-radius: 5px; font-size: .88rem; display: none;
+  }
+  .cap-display { cursor: pointer; text-decoration: underline dotted; color: #4f6ef7; }
+  .cap-display:hover { color: #3b57e0; }
+
+  /* Modal */
+  .modal-overlay {
+    display: none; position: fixed; inset: 0;
+    background: rgba(0,0,0,.45); z-index: 200;
+    align-items: center; justify-content: center;
+  }
+  .modal-overlay.active { display: flex; }
+  .modal {
+    background: #fff; border-radius: 12px; padding: 28px;
+    width: 680px; max-width: 95vw; max-height: 90vh;
+    display: flex; flex-direction: column; box-shadow: 0 8px 40px rgba(0,0,0,.18);
+  }
+  .modal-header {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 16px;
+  }
+  .modal-header h2 { font-size: 1.05rem; }
+  .modal-close {
+    background: none; border: none; font-size: 1.4rem;
+    cursor: pointer; color: #888; line-height: 1;
+  }
+  .modal-close:hover { color: #333; }
+  .modal-actions { margin-bottom: 14px; display: flex; justify-content: flex-end; }
+  .modal-table-wrap { overflow-y: auto; flex: 1; }
+  .modal-table-wrap table td, .modal-table-wrap table th { padding: 8px 10px; }
+  .empty-msg { text-align: center; padding: 32px; color: #aaa; font-size: .9rem; }
+
+  #loading-bar {
+    text-align: center; padding: 60px; color: #888; font-size: 1rem;
+  }
+</style>
+</head>
+<body>
+
+<!-- Login -->
+<div id="login-screen">
+  <div class="login-card">
+    <h1>꿈키움 관리자</h1>
+    <p>관리자 비밀번호를 입력하세요</p>
+    <input type="password" id="pw-input" placeholder="비밀번호" autocomplete="current-password">
+    <button id="login-btn">로그인</button>
+    <div class="login-error" id="login-error"></div>
+  </div>
+</div>
+
+<!-- Dashboard -->
+<div id="dashboard">
+  <header>
+    <h1>꿈키움 수강신청 관리자</h1>
+    <div class="header-actions">
+      <button class="btn btn-outline" id="refresh-btn">새로고침</button>
+      <button class="btn btn-primary" id="export-all-btn">전체 CSV</button>
+      <button class="btn btn-danger" id="logout-btn">로그아웃</button>
+    </div>
+  </header>
+  <main>
+    <div class="summary-row">
+      <div class="card">
+        <div class="card-label">전체 신청자</div>
+        <div class="card-value" id="stat-total">-</div>
+      </div>
+      <div class="card">
+        <div class="card-label">마감 강좌 (강제마감 포함)</div>
+        <div class="card-value red" id="stat-closed">-</div>
+      </div>
+      <div class="card">
+        <div class="card-label">폐강 위험 (신청 &lt; 5)</div>
+        <div class="card-value yellow" id="stat-low">-</div>
+      </div>
+    </div>
+
+    <div class="table-wrap">
+      <div class="table-toolbar">
+        <span id="table-count">강좌 목록</span>
+      </div>
+      <div id="loading-bar">불러오는 중...</div>
+      <table id="course-table" style="display:none">
+        <thead>
+          <tr>
+            <th>코드</th>
+            <th>강좌명</th>
+            <th>기관</th>
+            <th>지역</th>
+            <th>신청/정원</th>
+            <th>잔여</th>
+            <th>강제마감</th>
+            <th>정원수정</th>
+            <th>명단</th>
+            <th>CSV</th>
+          </tr>
+        </thead>
+        <tbody id="course-tbody"></tbody>
+      </table>
+    </div>
+  </main>
+</div>
+
+<!-- Enrollment Modal -->
+<div class="modal-overlay" id="enroll-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <h2 id="modal-title">신청자 명단</h2>
+      <button class="modal-close" id="modal-close-btn">&times;</button>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-outline btn-sm" id="modal-csv-btn">CSV 내보내기</button>
+    </div>
+    <div class="modal-table-wrap">
+      <table id="modal-table">
+        <thead>
+          <tr>
+            <th>학번</th><th>이름</th><th>학교</th><th>연락처</th>
+          </tr>
+        </thead>
+        <tbody id="modal-tbody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<script>
+  const API = (path) => path; // same origin on Vercel
+  let PASSWORD = '';
+  let coursesData = [];
+  let modalCode = '';
+
+  function authHeaders() {
+    return {
+      'Authorization': `Bearer ${PASSWORD}`,
+      'Content-Type': 'application/json',
+    };
+  }
+
+  // ── Login ──────────────────────────────────────────────────────────────────
+  document.getElementById('pw-input').addEventListener('keydown', e => {
+    if (e.key === 'Enter') document.getElementById('login-btn').click();
+  });
+
+  document.getElementById('login-btn').addEventListener('click', async () => {
+    const pw = document.getElementById('pw-input').value.trim();
+    if (!pw) return;
+    document.getElementById('login-error').textContent = '';
+    document.getElementById('login-btn').disabled = true;
+    document.getElementById('login-btn').textContent = '확인 중...';
+
+    try {
+      const res = await fetch('/api/courses', {
+        headers: { 'Authorization': `Bearer ${pw}` }
+      });
+      if (res.status === 401) {
+        document.getElementById('login-error').textContent = '비밀번호가 올바르지 않습니다.';
+        return;
+      }
+      if (!res.ok) throw new Error(`서버 오류 ${res.status}`);
+      PASSWORD = pw;
+      sessionStorage.setItem('admin_pw', pw);
+      showDashboard(await res.json());
+    } catch (e) {
+      document.getElementById('login-error').textContent = e.message;
+    } finally {
+      document.getElementById('login-btn').disabled = false;
+      document.getElementById('login-btn').textContent = '로그인';
+    }
+  });
+
+  // ── Dashboard ──────────────────────────────────────────────────────────────
+  function showDashboard(courses) {
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('dashboard').style.display = 'block';
+    renderCourses(courses);
+  }
+
+  async function loadCourses() {
+    document.getElementById('loading-bar').style.display = 'block';
+    document.getElementById('course-table').style.display = 'none';
+    const res = await fetch('/api/courses', { headers: authHeaders() });
+    if (res.status === 401) { logout(); return; }
+    const data = await res.json();
+    renderCourses(data);
+  }
+
+  function renderCourses(courses) {
+    coursesData = courses;
+    document.getElementById('loading-bar').style.display = 'none';
+    document.getElementById('course-table').style.display = 'table';
+
+    const registerable = courses.filter(c => c.is_registerable !== false);
+    const totalEnrolled = registerable.reduce((s, c) => s + (c.enrolled_count || 0), 0);
+    const closedCount = registerable.filter(c =>
+      c.is_closed_manual || (c.enrolled_count >= c.capacity)
+    ).length;
+    const lowCount = registerable.filter(c =>
+      (c.enrolled_count || 0) < 5 && !c.is_closed_manual
+    ).length;
+
+    document.getElementById('stat-total').textContent = totalEnrolled;
+    document.getElementById('stat-closed').textContent = closedCount;
+    document.getElementById('stat-low').textContent = lowCount;
+    document.getElementById('table-count').textContent =
+      `총 ${courses.length}개 강좌 (신청 가능: ${registerable.length}개)`;
+
+    const tbody = document.getElementById('course-tbody');
+    tbody.innerHTML = '';
+
+    for (const c of courses) {
+      const remaining = c.capacity - (c.enrolled_count || 0);
+      const isFull = remaining <= 0;
+      const isLow = (c.enrolled_count || 0) < 5 && !c.is_closed_manual && c.is_registerable !== false;
+      const tr = document.createElement('tr');
+      if (isFull || c.is_closed_manual) tr.className = 'row-full';
+      else if (isLow) tr.className = 'row-low';
+
+      const toggleClass = c.is_closed_manual ? 'on' : 'off';
+      const toggleLabel = c.is_closed_manual ? '마감중' : 'OFF';
+      const disabledAttr = c.is_registerable === false ? 'disabled title="별도모집 강좌"' : '';
+
+      tr.innerHTML = `
+        <td><code>${c.code}</code></td>
+        <td>${c.name}</td>
+        <td>${c.org || ''}</td>
+        <td>${c.region || ''}</td>
+        <td>${c.enrolled_count || 0} / ${c.capacity}</td>
+        <td>${remaining < 0 ? 0 : remaining}</td>
+        <td>
+          <button class="toggle-btn ${toggleClass}" data-code="${c.code}" data-val="${c.is_closed_manual}" ${disabledAttr}>
+            ${toggleLabel}
+          </button>
+        </td>
+        <td>
+          <div class="cap-cell">
+            <span class="cap-display" data-code="${c.code}">${c.capacity}</span>
+            <input class="cap-input" data-code="${c.code}" type="number" min="1" max="999" value="${c.capacity}">
+          </div>
+        </td>
+        <td><button class="btn btn-outline btn-sm list-btn" data-code="${c.code}" data-name="${c.name}">명단</button></td>
+        <td><button class="btn btn-outline btn-sm csv-btn" data-code="${c.code}">CSV</button></td>
+      `;
+      tbody.appendChild(tr);
+    }
+
+    // Toggle close
+    tbody.querySelectorAll('.toggle-btn').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        const code = btn.dataset.code;
+        const newVal = btn.dataset.val === 'true' ? false : true;
+        btn.disabled = true;
+        try {
+          const res = await fetch('/api/toggle-close', {
+            method: 'POST',
+            headers: authHeaders(),
+            body: JSON.stringify({ code, value: newVal }),
+          });
+          if (res.status === 401) { logout(); return; }
+          if (!res.ok) throw new Error(await res.text());
+          // Update locally
+          const idx = coursesData.findIndex(c => c.code === code);
+          if (idx !== -1) coursesData[idx].is_closed_manual = newVal;
+          btn.dataset.val = String(newVal);
+          btn.className = `toggle-btn ${newVal ? 'on' : 'off'}`;
+          btn.textContent = newVal ? '마감중' : 'OFF';
+          const row = btn.closest('tr');
+          const c = coursesData[idx];
+          const isFull = (c.enrolled_count || 0) >= c.capacity;
+          row.className = (isFull || newVal) ? 'row-full' : '';
+          updateStats();
+        } catch (e) {
+          alert('오류: ' + e.message);
+        } finally {
+          btn.disabled = false;
+        }
+      });
+    });
+
+    // Capacity inline edit
+    tbody.querySelectorAll('.cap-display').forEach(span => {
+      span.addEventListener('click', () => {
+        const input = span.nextElementSibling;
+        span.style.display = 'none';
+        input.style.display = 'inline-block';
+        input.focus();
+        input.select();
+      });
+    });
+    tbody.querySelectorAll('.cap-input').forEach(input => {
+      const save = async () => {
+        const code = input.dataset.code;
+        const cap = parseInt(input.value, 10);
+        const span = input.previousElementSibling;
+        if (isNaN(cap) || cap < 1) { input.style.display = 'none'; span.style.display = ''; return; }
+        try {
+          const res = await fetch('/api/set-capacity', {
+            method: 'POST',
+            headers: authHeaders(),
+            body: JSON.stringify({ code, capacity: cap }),
+          });
+          if (res.status === 401) { logout(); return; }
+          if (!res.ok) throw new Error(await res.text());
+          const idx = coursesData.findIndex(c => c.code === code);
+          if (idx !== -1) coursesData[idx].capacity = cap;
+          span.textContent = cap;
+        } catch (e) {
+          alert('오류: ' + e.message);
+        } finally {
+          input.style.display = 'none';
+          span.style.display = '';
+        }
+      };
+      input.addEventListener('keydown', e => { if (e.key === 'Enter') save(); if (e.key === 'Escape') { input.style.display = 'none'; input.previousElementSibling.style.display = ''; } });
+      input.addEventListener('blur', save);
+    });
+
+    // List modal
+    tbody.querySelectorAll('.list-btn').forEach(btn => {
+      btn.addEventListener('click', () => openModal(btn.dataset.code, btn.dataset.name));
+    });
+
+    // Per-course CSV
+    tbody.querySelectorAll('.csv-btn').forEach(btn => {
+      btn.addEventListener('click', () => downloadCSV(btn.dataset.code));
+    });
+  }
+
+  function updateStats() {
+    const registerable = coursesData.filter(c => c.is_registerable !== false);
+    document.getElementById('stat-total').textContent =
+      registerable.reduce((s, c) => s + (c.enrolled_count || 0), 0);
+    document.getElementById('stat-closed').textContent =
+      registerable.filter(c => c.is_closed_manual || (c.enrolled_count >= c.capacity)).length;
+    document.getElementById('stat-low').textContent =
+      registerable.filter(c => (c.enrolled_count || 0) < 5 && !c.is_closed_manual).length;
+  }
+
+  // ── Modal ──────────────────────────────────────────────────────────────────
+  async function openModal(code, name) {
+    modalCode = code;
+    document.getElementById('modal-title').textContent = `[${code}] ${name} 신청자 명단`;
+    document.getElementById('modal-tbody').innerHTML = '<tr><td colspan="4" style="text-align:center;padding:20px;color:#aaa">불러오는 중...</td></tr>';
+    document.getElementById('enroll-modal').classList.add('active');
+
+    try {
+      const res = await fetch(`/api/enrollments?code=${encodeURIComponent(code)}`, { headers: authHeaders() });
+      if (res.status === 401) { logout(); return; }
+      const data = await res.json();
+      const tbody = document.getElementById('modal-tbody');
+      tbody.innerHTML = '';
+      if (!data.length) {
+        tbody.innerHTML = '<tr><td colspan="4" class="empty-msg">신청자가 없습니다.</td></tr>';
+        return;
+      }
+      for (const r of data) {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${r.student_no || ''}</td>
+          <td>${r.student_name || ''}</td>
+          <td>${r.schools ? r.schools.name : ''}</td>
+          <td>${r.phone || ''}</td>
+        `;
+        tbody.appendChild(tr);
+      }
+    } catch (e) {
+      document.getElementById('modal-tbody').innerHTML =
+        `<tr><td colspan="4" class="empty-msg">오류: ${e.message}</td></tr>`;
+    }
+  }
+
+  document.getElementById('modal-close-btn').addEventListener('click', () => {
+    document.getElementById('enroll-modal').classList.remove('active');
+  });
+  document.getElementById('enroll-modal').addEventListener('click', e => {
+    if (e.target === document.getElementById('enroll-modal'))
+      document.getElementById('enroll-modal').classList.remove('active');
+  });
+  document.getElementById('modal-csv-btn').addEventListener('click', () => {
+    if (modalCode) downloadCSV(modalCode);
+  });
+
+  // ── CSV download ───────────────────────────────────────────────────────────
+  function downloadCSV(code) {
+    const url = code
+      ? `/api/enrollments?code=${encodeURIComponent(code)}&format=csv`
+      : '/api/enrollments?format=csv';
+    const a = document.createElement('a');
+    a.href = url;
+    // Pass password via header not possible with <a> href; use fetch+blob
+    fetch(url, { headers: authHeaders() })
+      .then(res => {
+        if (res.status === 401) { logout(); throw new Error('Unauthorized'); }
+        return res.blob();
+      })
+      .then(blob => {
+        const blobUrl = URL.createObjectURL(blob);
+        a.href = blobUrl;
+        a.download = code ? `enrollments_${code}.csv` : 'enrollments_all.csv';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(blobUrl);
+      })
+      .catch(e => alert('CSV 오류: ' + e.message));
+  }
+
+  // ── Header buttons ─────────────────────────────────────────────────────────
+  document.getElementById('refresh-btn').addEventListener('click', loadCourses);
+  document.getElementById('export-all-btn').addEventListener('click', () => downloadCSV(null));
+  document.getElementById('logout-btn').addEventListener('click', logout);
+
+  function logout() {
+    PASSWORD = '';
+    sessionStorage.removeItem('admin_pw');
+    document.getElementById('dashboard').style.display = 'none';
+    document.getElementById('login-screen').style.display = 'flex';
+    document.getElementById('pw-input').value = '';
+    document.getElementById('login-error').textContent = '';
+  }
+
+  // ── Auto-login from sessionStorage ────────────────────────────────────────
+  (async () => {
+    const saved = sessionStorage.getItem('admin_pw');
+    if (!saved) return;
+    PASSWORD = saved;
+    const res = await fetch('/api/courses', { headers: authHeaders() }).catch(() => null);
+    if (res && res.ok) {
+      showDashboard(await res.json());
+    } else {
+      PASSWORD = '';
+      sessionStorage.removeItem('admin_pw');
+    }
+  })();
+</script>
+</body>
+</html>
