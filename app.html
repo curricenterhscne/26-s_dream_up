@@ -37,6 +37,19 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--g50);color:var(--tex
 .hero-stats{display:flex;justify-content:center;gap:28px;margin-top:24px;flex-wrap:wrap}
 .hero-stat .val{font-size:26px;font-weight:900;color:var(--gold)}
 .hero-stat .lbl{font-size:11px;color:rgba(255,255,255,.7);margin-top:2px}
+.hero-open-tag{display:inline-block;margin-top:16px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.3);color:#fff;font-size:12px;font-weight:700;padding:5px 16px;border-radius:20px;letter-spacing:.3px}
+.hero-open-tag em{color:var(--gold);font-style:normal}
+
+/* ── Notice box ── */
+.notice-box{background:var(--white);border-left:4px solid var(--gold);border-radius:0 var(--r) var(--r) 0;box-shadow:var(--sh);padding:16px 20px;margin:0 0 0 0}
+.notice-box .notice-title{display:flex;align-items:center;gap:8px;font-size:15px;font-weight:800;color:var(--navy);margin-bottom:10px}
+.notice-box .notice-title .badge{background:var(--gold);color:#fff;font-size:11px;font-weight:800;padding:2px 10px;border-radius:20px}
+.notice-start{font-size:13px;font-weight:700;color:var(--navy);margin-bottom:8px}
+.notice-start .sub{font-size:11px;font-weight:500;color:var(--g400);margin-left:6px}
+.notice-rows{display:flex;flex-direction:column;gap:5px}
+.notice-row{display:flex;gap:8px;font-size:12px;color:var(--g700);line-height:1.5}
+.notice-row::before{content:'·';color:var(--gold);font-weight:700;flex-shrink:0}
+.notice-section{background:var(--g50);padding:20px;border-bottom:1px solid var(--g200)}
 
 /* ── Guide ── */
 .guide{background:var(--white);border-bottom:1px solid var(--g200);padding:36px 20px}
@@ -287,8 +300,31 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--g50);color:var(--tex
       <div class="hero-stat"><div class="val">20</div><div class="lbl">개 대학</div></div>
       <div class="hero-stat"><div class="val">8</div><div class="lbl">개 시·군</div></div>
     </div>
+    <div class="hero-open-tag">선착순 신청 · <em>2026. 6. 25.(목) 18:00 오픈 예정</em></div>
   </div>
 </header>
+
+<!-- ══ Notice ══ -->
+<section class="notice-section">
+  <div class="wrap" style="max-width:860px;margin:0 auto">
+    <div class="notice-box">
+      <div class="notice-title">
+        <span>📋 수강 신청 안내</span>
+        <span class="badge">선착순</span>
+      </div>
+      <div class="notice-start">
+        신청 시작 : 2026. 6. 25.(목) 18:00
+        <span class="sub">(수강신청 시스템은 추후 안내됩니다)</span>
+      </div>
+      <div class="notice-rows">
+        <div class="notice-row">1차 신청 : 2026. 6. 25.(목) 18:00 ~ 6. 28.(일) 15:00</div>
+        <div class="notice-row">2차 신청 : 2026. 6. 30.(화) 18:00 ~ 21:00</div>
+        <div class="notice-row">이수 기준 : 수업 시수의 2/3 이상 출석 · 학생 개별 이동 원칙</div>
+        <div class="notice-row">문의 : 충청남도교육청 중등교육과 ☎ 041-640-7221, 7224</div>
+      </div>
+    </div>
+  </div>
+</section>
 
 <!-- ══ Guide ══ -->
 <section class="guide">
