@@ -9,6 +9,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;900&family=Noto+Serif+KR:wght@600;700&display=swap" rel="stylesheet"/>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="_embed_data.js"></script>
+<script src="_detail_extra.js"></script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -240,6 +241,25 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--g50);color:var(--tex
 .d-ival{font-size:12px;color:var(--text);white-space:pre-line;line-height:1.55}
 .d-ibox{background:var(--sky);border-radius:10px;padding:12px 15px;font-size:13px;color:var(--navy);line-height:1.7;font-weight:500;margin-bottom:4px}
 .d-seats-row{font-size:13px;font-weight:700;margin:10px 0 12px}
+.d-chips{display:flex;flex-wrap:wrap;gap:5px;margin-top:10px}
+.d-chip{font-size:11px;padding:3px 10px;border-radius:10px;background:rgba(255,255,255,.15);color:rgba(255,255,255,.92);font-weight:500}
+.d-sec{margin-top:4px}
+.d-goal{background:var(--g50);border-radius:8px;padding:10px 13px;font-size:12px;color:var(--text);line-height:1.65;border-left:3px solid var(--blue);margin-bottom:6px}
+.d-goal-gold{border-left-color:var(--gold)}
+.d-recommend{background:var(--g50);border-radius:8px;padding:10px 13px;font-size:12px;color:var(--text);line-height:1.65;white-space:pre-line}
+.d-instr-card{background:var(--g50);border-radius:8px;padding:10px 13px;margin-bottom:6px}
+.d-instr-name{font-size:13px;font-weight:700;color:var(--navy);margin-bottom:2px}
+.d-instr-org{font-size:11px;color:var(--g400);margin-bottom:4px}
+.d-instr-bio{font-size:11px;color:var(--g700);line-height:1.6}
+.d-sched-table{width:100%;border-collapse:collapse;font-size:12px}
+.d-sched-table th{background:var(--sky);color:var(--navy);font-weight:700;padding:6px 8px;text-align:left;font-size:11px}
+.d-sched-table td{padding:6px 8px;border-bottom:1px solid var(--g200)}
+.d-sched-table tr:last-child td{border-bottom:none}
+.d-day-badge{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;font-size:11px;font-weight:700;background:var(--blue);color:#fff}
+.d-day-badge.sat{background:#e84545}
+.d-day-badge.sun{background:#c0392b}
+.d-total-row td{background:var(--g100);font-weight:700;font-size:11px}
+.d-sess-cnt{display:inline-block;background:var(--mint-bg);color:var(--mint);border-radius:10px;padding:1px 8px;font-size:11px;font-weight:700}
 
 /* ── Responsive ── */
 @media(max-width:500px){
@@ -460,6 +480,8 @@ const SCHOOL_MAP = {};
 SCHOOLS.forEach(s => SCHOOL_MAP[s.code] = s);
 const DETAIL_MAP = {};
 COURSE_DETAILS.forEach(d => DETAIL_MAP[d.code] = d);
+const EXTRA_MAP = {};
+if (typeof DETAIL_EXTRA !== 'undefined') DETAIL_EXTRA.forEach(e => EXTRA_MAP[e.code] = e);
 
 // ── Region colors (index.html 기준) ──
 const REGION_COLORS = {
@@ -916,11 +938,31 @@ async function submitConfirm() {
   }
 }
 
+// ── Schedule table builder (index.html 스타일) ──
+function buildScheduleHTML(schedule) {
+  if (!schedule || !schedule.length) return '';
+  const WD = {'월':'','화':'','수':'','목':'','금':'','토':'sat','일':'sun'};
+  const rows = schedule.map(s => `<tr>
+    <td style="text-align:center"><div class="d-day-badge ${WD[s.day]||''}">${s.day}</div></td>
+    <td><strong>${s.date.slice(5).replace('-','/')}</strong></td>
+    <td>${s.start} ~ ${s.end}</td>
+    <td style="text-align:center"><span class="d-sess-cnt">${s.cnt}차시</span></td>
+  </tr>`).join('');
+  const total = schedule.reduce((a, s) => a + s.cnt, 0);
+  return `<div style="overflow-x:auto"><table class="d-sched-table">
+    <thead><tr><th style="width:36px">요일</th><th style="width:64px">날짜</th><th>수업 시간</th><th style="width:72px">차시</th></tr></thead>
+    <tbody>${rows}
+      <tr class="d-total-row"><td colspan="3" style="text-align:right;padding-right:12px">총 수업일수</td>
+        <td style="text-align:center"><span class="d-sess-cnt">${schedule.length}일 / ${total}차시</span></td></tr>
+    </tbody></table></div>`;
+}
+
 // ── Detail modal ──
 function openDetailModal(code) {
   const c = courses.find(x => x.code === code);
   const d = DETAIL_MAP[code];
   if (!d) return;
+  const e = EXTRA_MAP[code] || {};
   detailCode = code;
 
   const region = c?.region || '';
@@ -931,6 +973,11 @@ function openDetailModal(code) {
   // ── 컬러 헤더 ──
   const head = document.getElementById('d-head');
   head.style.background = `linear-gradient(135deg,${color}f0 0%,${color} 100%)`;
+  const chips = [
+    e.schedule_str ? `<span class="d-chip">📅 ${e.schedule_str}</span>` : '',
+    d.method       ? `<span class="d-chip">${d.method}</span>` : '',
+    d.target       ? `<span class="d-chip">👨‍🎓 ${d.target}</span>` : '',
+  ].filter(Boolean).join('');
   head.innerHTML = `
     <button class="btn-close" style="position:absolute;top:11px;right:12px;color:#fff;background:rgba(255,255,255,.18);border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center" onclick="closeDetailModal()">✕</button>
     <div class="d-mh-top">
@@ -940,6 +987,7 @@ function openDetailModal(code) {
     ${org?`<div class="d-inst">${org}</div>`:''}
     <div class="d-title">${c?.name||code}</div>
     ${fields.length?`<div class="d-ftags">${fields.map(f=>`<span class="d-ftag">${f}</span>`).join('')}</div>`:''}
+    ${chips?`<div class="d-chips">${chips}</div>`:''}
   `;
 
   // ── 좌석 현황 ──
@@ -957,12 +1005,17 @@ function openDetailModal(code) {
   else if(!isOpen)            {btnTxt='신청 기간이 아닙니다';btnDisabled=true;}
 
   // ── 기본 정보 그리드 ──
+  const periodStr = (e.start && e.end)
+    ? `${e.start.slice(5).replace('-','/')} ~ ${e.end.slice(5).replace('-','/')}`
+    : d.period;
   const infoRows = [
-    ['운영 대상', d.target,         false],
-    ['수업 방식', d.method,         false],
-    ['운영 기간', d.period,         true],
-    ['수업 장소', d.place,          true],
-    ...(d.supply?[['준비물',        d.supply, true]]:[]),
+    ['수업 장소', d.place,        true],
+    ['운영 기간', periodStr,      false],
+    ...(e.schedule_str?[['수업 요일/시간', e.schedule_str, false]]:[]),
+    ['수업 방식', d.method,       false],
+    ['운영 대상', d.target,       false],
+    ...(d.supply && d.supply.toLowerCase().trim() !== 'x' && d.supply.trim() !== ''
+        ?[['준비물/복장', d.supply, true]]:[] ),
   ];
   const infoHtml = `<div class="d-igrid">${
     infoRows.filter(([,v])=>v).map(([lbl,val,full])=>
@@ -970,11 +1023,44 @@ function openDetailModal(code) {
     ).join('')
   }</div>`;
 
+  // ── 수업 일정 ──
+  const schedHtml = e.schedule?.length
+    ? `<div class="d-stitle">📆 수업 일정 (언제 가야 하나요?)</div>${buildScheduleHTML(e.schedule)}`
+    : '';
+
+  // ── 학습 목표 ──
+  const goalHtml = (e.goal1 || e.goal2)
+    ? `<div class="d-stitle">🎯 학습 목표</div>
+       ${e.goal1?`<div class="d-goal">${e.goal1}</div>`:''}
+       ${e.goal2?`<div class="d-goal d-goal-gold">${e.goal2}</div>`:''}`
+    : '';
+
+  // ── 추천 대상 ──
+  const recHtml = e.recommend
+    ? `<div class="d-stitle">🙋 추천 대상</div><div class="d-recommend">${e.recommend}</div>`
+    : '';
+
+  // ── 강사 소개 ──
+  let instrHtml = '';
+  if (e.instructors?.length) {
+    const cards = e.instructors.map(i => `
+      <div class="d-instr-card">
+        <div class="d-instr-name">👩‍🏫 ${i.name}</div>
+        <div class="d-instr-org">${i.org}${i.major?' · '+i.major:''}</div>
+        ${e.instructor_bio?`<div class="d-instr-bio">${e.instructor_bio}</div>`:''}
+      </div>`).join('');
+    instrHtml = `<div class="d-stitle">👩‍🏫 강사 소개</div>${cards}`;
+  }
+
   // ── 바디 렌더링 ──
   document.getElementById('d-body').innerHTML = `
-    ${d.intro?`<div class="d-ibox">${d.intro}</div>`:''}
+    ${d.intro?`<div class="d-ibox">💡 ${d.intro}</div>`:''}
     <div class="d-stitle">📋 강좌 기본 정보</div>
     ${infoHtml}
+    ${schedHtml}
+    ${goalHtml}
+    ${recHtml}
+    ${instrHtml}
     ${seatsHtml}
     <button class="btn-primary" id="d-apply-btn" ${btnDisabled?'disabled':''} onclick="applyFromDetail()">${btnTxt}</button>
   `;
