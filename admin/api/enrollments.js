@@ -32,7 +32,7 @@ export default async function handler(req, res) {
 
   const { code, format } = req.query;
 
-  let url = `${SUPABASE_URL}/rest/v1/enrollments?select=*&status=eq.active&order=student_no`;
+  let url = `${SUPABASE_URL}/rest/v1/enrollments?select=*&status=in.(active,pending)&order=student_no`;
   if (code) url += `&course_code=eq.${encodeURIComponent(code)}`;
 
   const response = await fetch(url, {
