@@ -329,10 +329,8 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--g50);color:var(--tex
 </div>
 <script>
     function goSignup(){
-      // 수강신청 시스템 오픈 후, 아래 주석을 실제 신청 URL로 교체하세요.
-      // window.location.href = 'https://신청시스템주소';
-      var el=document.getElementById('signup');
-      if(el){el.scrollIntoView({behavior:'smooth',block:'center'});
+      window.location.href = 'index.html';
+    });
         el.style.transition='box-shadow .3s'; el.style.boxShadow='0 0 0 4px #e8970f';
         setTimeout(function(){el.style.boxShadow='none';},1600);}
       alert('선착순 수강신청은 2026. 6. 25.(목) 18:00부터 진행됩니다.\n신청 방법은 추후 안내될 예정입니다.');
