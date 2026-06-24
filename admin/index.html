@@ -456,8 +456,8 @@
         const tr = document.createElement('tr');
         tr.innerHTML = `
           <td>${r.student_no || ''}</td>
-          <td>${r.student_name || ''}</td>
-          <td>${r.schools ? r.schools.name : ''}</td>
+          <td>${r.name || ''}</td>
+          <td>${r.school || ''}</td>
           <td>${r.phone || ''}</td>
         `;
         tbody.appendChild(tr);

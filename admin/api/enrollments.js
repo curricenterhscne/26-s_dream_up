@@ -12,15 +12,14 @@ function toCSV(rows) {
   const headers = ['강좌코드', '학번', '이름', '학교', '연락처', '신청일시'];
   const lines = [headers.join(',')];
   for (const r of rows) {
-    const schoolName = r.schools ? r.schools.name : '';
     lines.push(
       [
         r.course_code,
         r.student_no,
-        `"${(r.student_name || '').replace(/"/g, '""')}"`,
-        `"${schoolName.replace(/"/g, '""')}"`,
+        `"${(r.name || '').replace(/"/g, '""')}"`,
+        `"${(r.school || '').replace(/"/g, '""')}"`,
         r.phone || '',
-        r.enrolled_at || '',
+        r.created_at || '',
       ].join(',')
     );
   }
@@ -33,7 +32,7 @@ export default async function handler(req, res) {
 
   const { code, format } = req.query;
 
-  let url = `${SUPABASE_URL}/rest/v1/enrollments?select=*,schools(name)&status=eq.active&order=student_no`;
+  let url = `${SUPABASE_URL}/rest/v1/enrollments?select=*&status=eq.active&order=student_no`;
   if (code) url += `&course_code=eq.${encodeURIComponent(code)}`;
 
   const response = await fetch(url, {
