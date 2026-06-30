@@ -154,7 +154,7 @@
     <h1>꿈키움 수강신청 관리자</h1>
     <div class="header-actions">
       <button class="btn btn-outline" id="refresh-btn">새로고침</button>
-      <button class="btn btn-primary" id="export-all-btn">전체 CSV</button>
+      <button class="btn btn-primary" id="export-all-btn">전체 엑셀</button>
       <button class="btn btn-danger" id="logout-btn">로그아웃</button>
     </div>
   </header>
@@ -208,7 +208,7 @@
       <button class="modal-close" id="modal-close-btn">&times;</button>
     </div>
     <div class="modal-actions">
-      <button class="btn btn-outline btn-sm" id="modal-csv-btn">CSV 내보내기</button>
+      <button class="btn btn-outline btn-sm" id="modal-csv-btn">엑셀 내보내기</button>
     </div>
     <div class="modal-table-wrap">
       <table id="modal-table">
@@ -338,7 +338,7 @@
           </div>
         </td>
         <td><button class="btn btn-outline btn-sm list-btn" data-code="${c.code}" data-name="${c.name}">명단</button></td>
-        <td><button class="btn btn-outline btn-sm csv-btn" data-code="${c.code}">CSV</button></td>
+        <td><button class="btn btn-outline btn-sm csv-btn" data-code="${c.code}">엑셀</button></td>
       `;
       tbody.appendChild(tr);
     }
@@ -481,29 +481,26 @@
     if (modalCode) downloadCSV(modalCode);
   });
 
-  // ── CSV download ───────────────────────────────────────────────────────────
+  // ── Excel download ──────────────────────────────────────────────────────────
   function downloadCSV(code) {
     const url = code
-      ? `/api/enrollments?code=${encodeURIComponent(code)}&format=csv`
-      : '/api/enrollments?format=csv';
-    const a = document.createElement('a');
-    a.href = url;
-    // Pass password via header not possible with <a> href; use fetch+blob
+      ? `/api/enrollments?code=${encodeURIComponent(code)}&format=excel`
+      : '/api/enrollments?format=excel';
     fetch(url, { headers: authHeaders() })
       .then(res => {
         if (res.status === 401) { logout(); throw new Error('Unauthorized'); }
         return res.blob();
       })
       .then(blob => {
-        const blobUrl = URL.createObjectURL(blob);
-        a.href = blobUrl;
-        a.download = code ? `enrollments_${code}.csv` : 'enrollments_all.csv';
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = code ? `enrollments_${code}.xlsx` : 'enrollments_all.xlsx';
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
-        URL.revokeObjectURL(blobUrl);
+        URL.revokeObjectURL(a.href);
       })
-      .catch(e => alert('CSV 오류: ' + e.message));
+      .catch(e => alert('엑셀 오류: ' + e.message));
   }
 
   // ── Header buttons ─────────────────────────────────────────────────────────

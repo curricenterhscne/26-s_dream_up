@@ -1,3 +1,5 @@
+import * as XLSX from 'xlsx';
+
 const SUPABASE_URL = process.env.SUPABASE_URL;
 const SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;
@@ -56,26 +58,34 @@ async function fetchSchoolMap() {
   return map;
 }
 
-function toCSV(rows, schoolMap) {
+function toXLSX(rows, schoolMap) {
   const headers = ['강좌코드', '강좌명', '학번', '이름', '학교코드', '학교명', '연락처', '신청일시'];
-  const lines = [headers.join(',')];
+  const data = [headers];
   for (const r of rows) {
-    const courseName = r.courses?.name || '';
-    const schoolName = schoolMap[r.school] || '';
-    lines.push(
-      [
-        r.course_code,
-        `"${courseName.replace(/"/g, '""')}"`,
-        r.student_no,
-        `"${(r.name || '').replace(/"/g, '""')}"`,
-        r.school || '',
-        `"${schoolName.replace(/"/g, '""')}"`,
-        `"${r.phone || ''}"`,
-        r.created_at || '',
-      ].join(',')
-    );
+    data.push([
+      r.course_code || '',
+      r.courses?.name || '',
+      r.student_no || '',
+      r.name || '',
+      r.school || '',
+      schoolMap[r.school] || '',
+      r.phone || '',
+      r.created_at || '',
+    ]);
   }
-  return lines.join('\r\n');
+  const wb = XLSX.utils.book_new();
+  const ws = XLSX.utils.aoa_to_sheet(data);
+  // 학번·연락처 열을 텍스트 형식으로 강제 지정 (C·G열, 0-indexed 2·6)
+  const textCols = [2, 6];
+  const range = XLSX.utils.decode_range(ws['!ref']);
+  for (let row = 1; row <= range.e.r; row++) {
+    for (const col of textCols) {
+      const addr = XLSX.utils.encode_cell({ r: row, c: col });
+      if (ws[addr]) { ws[addr].t = 's'; ws[addr].z = '@'; }
+    }
+  }
+  XLSX.utils.book_append_sheet(wb, ws, '신청자');
+  return XLSX.write(wb, { type: 'buffer', bookType: 'xlsx' });
 }
 
 export default async function handler(req, res) {
@@ -84,23 +94,23 @@ export default async function handler(req, res) {
 
   const { code, format } = req.query;
 
-  if (format === 'csv') {
-    let csvUrl = `${SUPABASE_URL}/rest/v1/enrollments?select=*,courses(name)&status=in.(active,pending)&order=student_no`;
-    if (code) csvUrl += `&course_code=eq.${encodeURIComponent(code)}`;
+  if (format === 'excel') {
+    let xlUrl = `${SUPABASE_URL}/rest/v1/enrollments?select=*,courses(name)&status=in.(active,pending)&order=student_no`;
+    if (code) xlUrl += `&course_code=eq.${encodeURIComponent(code)}`;
 
     let allRows;
     try {
-      [allRows] = await Promise.all([fetchAllRows(csvUrl)]);
+      allRows = await fetchAllRows(xlUrl);
     } catch (e) {
       return res.status(502).json({ error: e.message });
     }
 
     const schoolMap = await fetchSchoolMap();
-    const csv = toCSV(allRows, schoolMap);
-    const filename = code ? `enrollments_${code}.csv` : 'enrollments_all.csv';
-    res.setHeader('Content-Type', 'text/csv; charset=utf-8');
+    const buf = toXLSX(allRows, schoolMap);
+    const filename = code ? `enrollments_${code}.xlsx` : 'enrollments_all.xlsx';
+    res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
     res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
-    return res.status(200).send('\uFEFF' + csv);
+    return res.status(200).send(buf);
   }
 
   // JSON — 기존 동작 유지
