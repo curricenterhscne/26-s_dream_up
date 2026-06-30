@@ -781,20 +781,27 @@ function renderStatusBar(d) {
   const badge = document.getElementById('open-badge');
   const cd    = document.getElementById('countdown');
   const now   = Date.now() + serverTimeDiff;
+  const phase = d.phase || (d.is_open ? 'open1' : 'closed');
 
   if (d.is_open) {
     badge.classList.add('visible');
+    // 현재 기간 마감 카운트다운 (1차→close1_at, 2차→close2_at)
+    const closeAt = phase === 'open2' ? d.close2_at : (d.close1_at || d.close2_at);
     let extra = '';
-    if (d.close2_at) {
-      const left = Math.round((new Date(d.close2_at).getTime() - now) / 1000);
+    if (closeAt) {
+      const left = Math.round((new Date(closeAt).getTime() - now) / 1000);
       if (left > 0) extra = ` — 마감까지 ${fmtTime(left)}`;
     }
     cd.textContent = extra;
   } else {
     badge.classList.remove('visible');
-    if (d.open_at) {
+    if (phase === 'between' && d.open2_at) {
+      // 1차 마감 ~ 2차 오픈 대기
+      const left = Math.round((new Date(d.open2_at).getTime() - now) / 1000);
+      cd.textContent = left > 0 ? `2차 신청 시작까지 ⏳ ${fmtTime(left)}` : '잠시 후 2차 신청이 시작됩니다.';
+    } else if (phase === 'before_open' && d.open_at) {
       const left = Math.round((new Date(d.open_at).getTime() - now) / 1000);
-      cd.textContent = left > 0 ? `신청 시작까지 ⏳ ${fmtTime(left)}` : '신청이 마감되었습니다.';
+      cd.textContent = left > 0 ? `신청 시작까지 ⏳ ${fmtTime(left)}` : '신청이 곧 시작됩니다.';
     } else {
       cd.textContent = '신청이 마감되었습니다.';
     }
