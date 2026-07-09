@@ -9,6 +9,20 @@
 
 ---
 
+## 2026 여름방학 운영 이력 요약
+
+| 일정 | 내용 |
+|---|---|
+| 2026-06-25 18:00 | 1차 수강신청 오픈 |
+| 2026-06-28 15:00 | 1차 마감 |
+| 2026-06-30 18:00 | 2차 수강신청 오픈 |
+| 2026-06-30 21:00 | 2차 마감 |
+
+- 전 강좌 정원 15명, 89개 강좌, 122개 학교
+- 2차 신청은 1차 미달 강좌 대상 추가 모집
+
+---
+
 ## 다음 회기에 업데이트해야 할 것들
 
 ### 1. 강좌 데이터 (`_embed_data.js` + Supabase)
@@ -43,7 +57,7 @@ UPDATE settings SET
 
 ### 4. 안내 텍스트 (index.html, guide.html 공통)
 - 운영 기간, 신청 일정, 연도 등 텍스트 검색 후 일괄 수정
-- 주요 검색어: `2026`, `6. 25`, `6. 28`, `6. 30`, `7. 20`, `8. 9`
+- 주요 검색어: `2026`, `6. 25`, `6. 28`, `6. 30`
 
 ### 5. 정원 수 변경 시
 - 현재 전 강좌 capacity=15
@@ -52,10 +66,11 @@ UPDATE settings SET
 ---
 
 ## 변경 불필요한 것들 (재사용)
-- ✅ Supabase 스키마 (001, 003 migration) — 재실행 불필요
+- ✅ Supabase 스키마 (001, 003, 004 migration) — 재실행 불필요
 - ✅ 학교 데이터 (변동 없으면)
 - ✅ admin/ Vercel 배포 — 강좌 데이터와 무관하게 그대로 동작
-- ✅ 신청/취소/조회 RPC 로직
+- ✅ 신청/취소/조회/선점 RPC 로직
+- ✅ get_open_status RPC (1·2차 오픈 기간 자동 처리)
 - ✅ index.html UI 구조 및 신청 흐름
 - ✅ guide.html 강좌 안내 UI 구조
 
@@ -73,7 +88,7 @@ UPDATE settings SET
   UPDATE courses SET enrolled_count = 0, is_closed_manual = false;
   ```
 - [ ] 테스트: 신청 → 확정 → 취소 흐름 확인
-- [ ] 관리자 페이지 명단/CSV 확인
+- [ ] 관리자 페이지 명단/엑셀 다운로드 확인
 - [ ] 학생 공지 URL: GitHub Pages 메인 URL (`index.html`)
 
 ---
@@ -87,6 +102,24 @@ UPDATE settings SET
 | Supabase URL | `https://yhrgvnttjlitukrxdfdo.supabase.co` |
 | Vercel (admin) | Root Directory: `admin`, Node 24.x |
 | Vercel 환경변수 | SUPABASE_URL / SUPABASE_SERVICE_ROLE_KEY / ADMIN_PASSWORD |
+
+---
+
+## 주요 파일 역할 요약
+
+| 파일 | 역할 |
+|---|---|
+| `index.html` | 학생 수강신청 페이지 (메인) |
+| `guide.html` | 강좌 안내 페이지 |
+| `app.html` | index.html 복사본 (기존 링크 호환용) |
+| `_embed_data.js` | 프론트엔드용 강좌·학교 데이터 |
+| `admin/api/enrollments.js` | 신청자 조회 + 엑셀 다운로드 API |
+| `admin/api/courses.js` | 강좌 현황 조회 API |
+| `admin/api/toggle-close.js` | 강좌 수동 마감 토글 API |
+| `admin/api/set-capacity.js` | 강좌 정원 변경 API |
+| `supabase/migrations/001_init_schema.sql` | 테이블·RLS·기본 RPC |
+| `supabase/migrations/003_add_reservation_pin.sql` | 선점 패턴·PIN 취소 RPC |
+| `supabase/migrations/004_get_open_status.sql` | 1·2차 오픈 상태 RPC |
 
 ---
 
