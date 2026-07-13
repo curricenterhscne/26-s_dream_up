@@ -3,13 +3,12 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-<title>2026 꿈키움 학교 밖 교육 수강신청</title>
+<title>2026-2학기 고교-대학 연계 학점 인정 수강신청</title>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23152460'/%3E%3Ctext x='16' y='23' text-anchor='middle' font-size='20'%3E🌱%3C/text%3E%3C/svg%3E"/>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;900&family=Noto+Serif+KR:wght@600;700&display=swap" rel="stylesheet"/>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="_embed_data.js"></script>
-<script src="_detail_extra.js"></script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -278,6 +277,24 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--g50);color:var(--tex
 .d-total-row td{background:var(--g100);font-weight:700;font-size:11px}
 .d-sess-cnt{display:inline-block;background:var(--mint-bg);color:var(--mint);border-radius:10px;padding:1px 8px;font-size:11px;font-weight:700}
 
+/* ── University color bar on cards ── */
+.card-uni-bar{height:4px;border-radius:var(--r) var(--r) 0 0;margin:-16px -16px 10px}
+.card-credit{font-size:11px;color:#075985;background:#f0f9ff;border-radius:6px;padding:3px 8px;margin-top:2px;line-height:1.4}
+.grade-badge{display:inline-block;font-size:10px;font-weight:700;color:#92400e;background:#fffbeb;border:1px solid #fcd34d;border-radius:10px;padding:1px 8px;margin-left:6px}
+
+/* ── Credit recognition box in detail modal ── */
+.d-credit-box{background:linear-gradient(135deg,#f0f9ff,#e0f2fe);border:1.5px solid #7dd3fc;border-radius:10px;padding:14px 16px;margin-bottom:12px}
+.d-credit-title{font-size:12px;font-weight:800;color:#0369a1;margin-bottom:6px}
+.d-credit-text{font-size:13px;color:#0c4a6e;line-height:1.7;white-space:pre-line}
+
+/* ── Collapsible sessions ── */
+.d-sess-toggle{display:flex;align-items:center;justify-content:space-between;cursor:pointer;padding:8px 12px;background:var(--g50);border-radius:8px;border:1px solid var(--g200);margin-bottom:6px;font-size:12px;font-weight:700;color:var(--navy)}
+.d-sess-toggle:hover{background:var(--sky)}
+.d-sess-toggle .arrow{transition:transform .2s;font-size:10px}
+.d-sess-toggle.open .arrow{transform:rotate(180deg)}
+.d-sess-content{display:none;margin-bottom:8px}
+.d-sess-content.open{display:block}
+
 /* ── Responsive ── */
 @media(max-width:500px){
   #course-grid{grid-template-columns:1fr}
@@ -293,14 +310,14 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--g50);color:var(--tex
 <header class="hero">
   <div class="hero-in">
     <div class="hero-badge">충청남도교육청</div>
-    <h1>2026학년도 여름방학<br>꿈키움 학교 밖 교육<br>창의적체험활동 수강 신청</h1>
-    <p>충남 관내 고등학생을 위한 대학 연계 창의적 체험활동 프로그램입니다.<br>강좌별 상세 내용을 잘 살펴보고 [신청하기]를 눌러 수강신청하세요.</p>
+    <h1>2026학년도 2학기<br>고교-대학 연계 학점 인정<br>학교 밖 교육 수강 신청</h1>
+    <p>충남 관내 고등학교 1~2학년을 위한 대학 연계 학점 인정 프로그램입니다.<br>강좌별 상세 내용을 잘 살펴보고 [신청하기]를 눌러 수강신청하세요.</p>
     <div class="hero-stats">
-      <div class="hero-stat"><div class="val">89</div><div class="lbl">개 강좌</div></div>
-      <div class="hero-stat"><div class="val">20</div><div class="lbl">개 대학</div></div>
+      <div class="hero-stat"><div class="val">14</div><div class="lbl">개 강좌</div></div>
+      <div class="hero-stat"><div class="val">5</div><div class="lbl">개 대학</div></div>
     </div>
-    <div class="hero-open-tag">선착순 신청 · <em>2026. 6. 25.(목) 18:00 오픈 예정</em></div>
-    <a href="guide.html" target="_blank" style="display:inline-block;margin-top:14px;padding:7px 20px;background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.4);border-radius:20px;font-size:13px;text-decoration:none;">📄 강좌 안내 페이지 보기</a>
+    <div class="hero-open-tag">선착순 신청 · <em>2026. 7. 16.(수) 18:00 오픈 예정</em></div>
+    <a href="https://onmadang.or.kr/dual_credit/" target="_blank" style="display:inline-block;margin-top:14px;padding:7px 20px;background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.4);border-radius:20px;font-size:13px;text-decoration:none;">📄 강좌 안내 페이지 보기</a>
   </div>
 </header>
 
@@ -309,42 +326,39 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--g50);color:var(--tex
   <div class="wrap" style="max-width:860px;margin:0 auto">
     <div class="notice-box">
       <div class="notice-title">
-        <span>📋 2026학년도 여름방학 꿈키움 학교 밖 교육 창의적체험활동 안내</span>
+        <span>📋 2026학년도 2학기 고교-대학 연계 학점 인정 학교 밖 교육 안내</span>
       </div>
       <p style="font-size:13px;color:#444;line-height:1.85;margin-bottom:14px">
-        학생 맞춤형 교육과정 다양화와 자기주도적 진로학업설계 역량 강화를 위한 2026학년도 여름방학 꿈키움 학교 밖 교육 창의적체험활동을 다음과 같이 안내합니다.<br>관심 있는 학생들은 기간 내 신청하여 주시기 바랍니다.
+        학생 맞춤형 교육과정 다양화와 자기주도적 진로학업설계 역량 강화를 위한 2026학년도 2학기 고교-대학 연계 학점 인정 학교 밖 교육 과목을 다음과 같이 안내합니다.<br>관심 있는 학생들은 기간 내 신청하여 주시기 바랍니다.
       </p>
       <div style="display:grid;gap:10px;font-size:13px;color:#1f3a5f">
 
         <div style="display:flex;gap:10px">
           <span style="font-weight:700;min-width:72px;color:#b45309">① 대상</span>
-          <span>충청남도 관내 고등학교 재학생 (무학년제 운영, 일부 강좌 학년 제한)<br>
-          <span style="color:#666;font-size:12px">· 이동을 고려하여 소속교 소재 지역에서 개설되는 강좌에 수강 신청 권장</span></span>
+          <span>충남 관내 고등학교 1~2학년 재학생<br>
+          <span style="color:#666;font-size:12px">· 과목에 따라 특정 학년만 신청 가능한 경우 있음 (각 강좌 안내 확인)</span></span>
         </div>
 
         <div style="display:flex;gap:10px">
           <span style="font-weight:700;min-width:72px;color:#b45309">② 강좌</span>
-          <span>마음의 색과 모양을 찾는 아트 프로젝트 외 <b>88강좌</b></span>
+          <span>교육과 심리학의 이해 외 <b>13강좌 (5개 대학)</b></span>
         </div>
 
         <div style="display:flex;gap:10px">
           <span style="font-weight:700;min-width:72px;color:#b45309">③ 운영</span>
-          <span>2026. 7. 20.(월) ~ 8. 9.(일) <span style="color:#666;font-size:12px">[강좌별 세부 일정 확인 요망]</span></span>
+          <span>2026. 8. 22.(토) ~ 12. 13.(일) <span style="color:#666;font-size:12px">[강좌별 세부 일정 확인 요망]</span></span>
         </div>
 
         <div style="display:flex;gap:10px">
           <span style="font-weight:700;min-width:72px;color:#b45309">④ 인원</span>
-          <span>강좌별 5명 이상, 15명 이내</span>
+          <span>강좌별 15명</span>
         </div>
 
         <div style="display:flex;gap:10px">
           <span style="font-weight:700;min-width:72px;color:#b45309">⑤ 일정</span>
           <span style="line-height:2">
-            강좌 안내 : 2026. 6. 19. ~<br>
-            <b>1차 신청 : 2026. 6. 25.(목) 18:00 ~ 6. 28.(일) 15:00</b> <span style="color:#c2410c;font-size:11.5px">선착순</span><br>
-            1차 현황 안내 : 2026. 6. 30.(화) 12:00<br>
-            <b>2차 신청 : 2026. 6. 30.(화) 18:00 ~ 21:00</b> <span style="color:#c2410c;font-size:11.5px">미마감 강좌 선착순</span><br>
-            최종 확정 안내 : ~ 2026. 7. 2.(목) 공문 및 SMS
+            강좌 안내 : 2026. 7. 9. ~<br>
+            <b>수강 신청 : 2026. 7. 16.(수) 18:00 ~</b> <span style="color:#c2410c;font-size:11.5px">선착순</span>
           </span>
         </div>
 
@@ -357,9 +371,11 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--g50);color:var(--tex
         </div>
 
         <div style="background:#f0f9ff;border:1px solid #bae6fd;border-radius:8px;padding:10px 14px;font-size:12.5px;color:#444;line-height:1.9">
-          <b style="color:#075985">📚 이수 처리</b><br>
+          <b style="color:#075985">📚 이수 처리 및 대학 학점 인정</b><br>
           · 총 수업시수의 2/3 이상 출석한 학생에 대해 이수 처리 후 승인<br>
-          · 이수 기준 충족 시 창의적체험활동 시수 인정 및 학교생활기록부 특기사항 기재
+          · 이수 기준 충족 시 창의적체험활동 시수 인정 및 학교생활기록부 특기사항 기재<br>
+          · <b>이수 후 해당 대학 입학 시 대학 학점 인정</b> (대학별 세부사항은 각 강좌 안내 참고)<br>
+          · 동일 학년도 입학생 기준 3년간 최대 8학점 이내
         </div>
 
       </div>
@@ -420,10 +436,6 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--g50);color:var(--tex
       <div class="filter-search-row">
         <input class="search-box" type="text" placeholder="강좌명, 기관명 검색" oninput="setNameFilter(this.value)"/>
         <span id="poll-ts"></span>
-      </div>
-      <div class="filter-group">
-        <div class="filter-label">지역</div>
-        <div class="filter-chips" id="region-chips"></div>
       </div>
       <div class="filter-group">
         <div class="filter-label">계열</div>
@@ -576,14 +588,13 @@ const SCHOOL_MAP = {};
 SCHOOLS.forEach(s => SCHOOL_MAP[s.code] = s);
 const DETAIL_MAP = {};
 COURSE_DETAILS.forEach(d => DETAIL_MAP[d.code] = d);
-const EXTRA_MAP = {};
-if (typeof DETAIL_EXTRA !== 'undefined') DETAIL_EXTRA.forEach(e => EXTRA_MAP[e.code] = e);
-
-// ── Region colors (index.html 기준) ──
-const REGION_COLORS = {
-  "천안":"#1a5276","아산":"#117a65","공주":"#7d6608","당진":"#145a7c",
-  "홍성":"#7d6608","금산":"#922b21","논산계룡":"#6e2f8c","서천":"#1b6b5a",
-  "보령":"#117a65","예산":"#7d6608","태안":"#145a7c","부여":"#6e2f8c"
+// ── University brand colors ──
+const UNI_COLORS = {
+  "국립공주대학교":"#1B3A6B",
+  "단국대학교":"#C8102E",
+  "백석대학교":"#00529B",
+  "순천향대학교":"#005BAC",
+  "충남대학교":"#003876"
 };
 
 // ── State ──
@@ -593,7 +604,6 @@ let isOpen = false;
 let openAt = null;
 let courses = [];
 let filterField  = '';
-let filterRegion = '';
 let filterOrg    = '';
 let nameFilter   = '';
 
@@ -606,9 +616,8 @@ let detailCode = null;
 
 // ── Field categories for filter ──
 const FIELDS = [
-  '공학·IT','생명·자연과학','의약·보건','경영·경제','예술·디자인',
-  '인문·어문','미디어·영상','식품·조리','사회·복지','법·경찰·군사',
-  '스포츠·체육','관광·서비스','항공·우주','반려동물·농업'
+  '인문·어문','사회·복지','생명·자연과학','의약·보건',
+  '식품·조리','관광·서비스','법·경찰·군사','예술·디자인'
 ];
 
 // ── Init ──
@@ -626,14 +635,6 @@ async function init() {
 
 // ── Filter build (called after courses load) ──
 function buildFilterBar() {
-  // 지역 목록 (고정 순서)
-  const REGIONS = ['전체','천안','아산','공주','당진','홍성','논산계룡','금산','서산','서천','부여','예산','보령','청양','태안'];
-  const regionChips = document.getElementById('region-chips');
-  regionChips.innerHTML = REGIONS.map(r =>
-    `<button class="filter-chip${r==='전체'?' active':''}" data-region="${r==='전체'?'':r}"
-      onclick="setRegionFilter('${r==='전체'?'':r}')">${r}</button>`
-  ).join('');
-
   // 계열 목록
   const fieldChips = document.getElementById('field-chips');
   fieldChips.innerHTML = `<button class="filter-chip active" data-field="" onclick="setFilter('')">전체</button>` +
@@ -656,14 +657,6 @@ function setFilter(field) {
   filterField = field;
   document.querySelectorAll('#field-chips .filter-chip').forEach(c =>
     c.classList.toggle('active', c.dataset.field === field)
-  );
-  renderCourses();
-}
-
-function setRegionFilter(region) {
-  filterRegion = region;
-  document.querySelectorAll('#region-chips .filter-chip').forEach(c =>
-    c.classList.toggle('active', c.dataset.region === region)
   );
   renderCourses();
 }
@@ -838,7 +831,6 @@ async function loadCourses() {
 
 function renderCourses() {
   let list = courses;
-  if (filterRegion) list = list.filter(c => c.region === filterRegion);
   if (filterField)  list = list.filter(c => { const d = DETAIL_MAP[c.code]; return d && d.field.includes(filterField); });
   if (filterOrg)    list = list.filter(c => c.org === filterOrg);
   if (nameFilter)   list = list.filter(c => c.name.includes(nameFilter) || (c.org||'').includes(nameFilter));
@@ -856,13 +848,19 @@ function renderCard(c) {
   const field  = (d.field || '').split(' · ')[0];
   const period = d.period || '';
   const place  = (d.place || '').split('(')[0].trim().substring(0, 22);
+  const uni    = d.university || c.org || '';
+  const uniColor = UNI_COLORS[uni] || '#152460';
+
+  // Grade restriction badge
+  const gradeBadge = d.gradeRestricted ? '<span class="grade-badge">2학년만 신청 가능</span>' : '';
+
+  // Credit recognition summary
+  const creditMatch = (d.creditRecognition||'').match(/(\d)학점/);
+  const creditHtml = creditMatch ? `<div class="card-credit">🎓 입학 시 ${creditMatch[1]}학점 인정</div>` : '';
 
   let seatHtml, btnHtml;
 
-  if (!c.is_registerable) {
-    seatHtml = `<span class="seats full" style="color:var(--g400)">별도 모집</span>`;
-    btnHtml  = `<button class="btn-sm btn-apply" disabled>신청 불가</button>`;
-  } else if (c.is_full) {
+  if (c.is_full) {
     seatHtml = `<span class="seats full">마감</span>`;
     btnHtml  = `<button class="btn-sm btn-apply" disabled>마감</button>`;
   } else {
@@ -875,14 +873,17 @@ function renderCard(c) {
 
   return `
   <div class="card${c.is_full ? ' is-full' : ''}">
+    <div class="card-uni-bar" style="background:${uniColor}"></div>
     <div class="card-top">
       <span class="field-badge">${field}</span>
-      <div class="card-name">${c.name}</div>
+      <div class="card-name">${c.name}${gradeBadge}</div>
     </div>
     <div class="card-meta">
+      <span>🏫 ${uni}</span>
       <span>📅 ${period}</span>
       <span>📍 ${place}</span>
     </div>
+    ${creditHtml}
     <div class="card-bottom">
       ${seatHtml}
       <div class="card-btns">
@@ -896,6 +897,17 @@ function renderCard(c) {
 // ── Reserve modal ──
 async function openReserveModal(code, btn) {
   if (!isOpen) { showToast('신청 기간이 아닙니다.', 'error'); return; }
+
+  // Grade restriction check
+  const detail = DETAIL_MAP[code];
+  if (detail && detail.gradeRestricted) {
+    const targetGrade = (detail.target || '').match(/(\d)학년/);
+    if (targetGrade) {
+      const allowed = targetGrade[1];
+      const msg = `이 강좌는 ${allowed}학년만 신청 가능합니다. 계속하시겠습니까?`;
+      if (!confirm(msg)) return;
+    }
+  }
 
   const origTxt = btn ? btn.textContent : '';
   if (btn) { btn.disabled = true; btn.textContent = '잠시만…'; }
@@ -1078,99 +1090,66 @@ async function submitConfirm() {
   }
 }
 
-// ── Session plan table builder ──
-function buildSessionsHTML(sessions) {
-  if (!sessions || !sessions.length) return '';
-  const rows = sessions.map(s => `<tr>
-    <td style="text-align:center;white-space:nowrap"><span class="d-sess-cnt">${s.n}차시</span></td>
-    <td style="white-space:nowrap">${s.date ? s.date.slice(5).replace('-','/') : ''}</td>
-    <td style="white-space:nowrap">${s.start||''}</td>
-    <td>${s.title||''}</td>
-    <td style="white-space:nowrap">${s.teacher||''}</td>
-  </tr>`).join('');
-  return `<div style="overflow-x:auto"><table class="d-sched-table">
-    <thead><tr><th style="width:46px">차시</th><th style="width:56px">날짜</th><th style="width:56px">시간</th><th>내용</th><th style="width:70px">강사</th></tr></thead>
-    <tbody>${rows}</tbody></table></div>`;
-}
-
-// ── Schedule table builder (index.html 스타일) ──
-function buildScheduleHTML(schedule) {
-  if (!schedule || !schedule.length) return '';
-  const WD = {'월':'','화':'','수':'','목':'','금':'','토':'sat','일':'sun'};
-  const rows = schedule.map(s => `<tr>
-    <td style="text-align:center"><div class="d-day-badge ${WD[s.day]||''}">${s.day}</div></td>
-    <td><strong>${s.date.slice(5).replace('-','/')}</strong></td>
-    <td>${s.start} ~ ${s.end}</td>
-    <td style="text-align:center"><span class="d-sess-cnt">${s.cnt}차시</span></td>
-  </tr>`).join('');
-  const total = schedule.reduce((a, s) => a + s.cnt, 0);
-  return `<div style="overflow-x:auto"><table class="d-sched-table">
-    <thead><tr><th style="width:36px">요일</th><th style="width:64px">날짜</th><th>수업 시간</th><th style="width:72px">차시</th></tr></thead>
-    <tbody>${rows}
-      <tr class="d-total-row"><td colspan="3" style="text-align:right;padding-right:12px">총 수업일수</td>
-        <td style="text-align:center"><span class="d-sess-cnt">${schedule.length}일 / ${total}차시</span></td></tr>
-    </tbody></table></div>`;
-}
-
 // ── Detail modal ──
 function openDetailModal(code) {
   const c = courses.find(x => x.code === code);
   const d = DETAIL_MAP[code];
   if (!d) return;
-  const e = EXTRA_MAP[code] || {};
   detailCode = code;
 
-  const region = c?.region || '';
-  const color  = REGION_COLORS[region] || '#152460';
+  const uni    = d.university || c?.org || '';
+  const color  = UNI_COLORS[uni] || '#152460';
   const fields = d.field ? d.field.split(' · ') : [];
-  const org    = c?.org || '';
 
   // ── 컬러 헤더 ──
   const head = document.getElementById('d-head');
   head.style.background = `linear-gradient(135deg,${color}f0 0%,${color} 100%)`;
+  const gradeBadgeHtml = d.gradeRestricted ? `<span class="d-chip" style="background:#fcd34d;color:#92400e;font-weight:700">⚠️ ${d.target}만 신청 가능</span>` : '';
   const chips = [
-    e.schedule_str ? `<span class="d-chip">📅 ${e.schedule_str}</span>` : '',
     d.method       ? `<span class="d-chip">${d.method}</span>` : '',
     d.target       ? `<span class="d-chip">👨‍🎓 ${d.target}</span>` : '',
+    gradeBadgeHtml,
   ].filter(Boolean).join('');
   head.innerHTML = `
     <button class="btn-close" style="position:absolute;top:11px;right:12px;color:#fff;background:rgba(255,255,255,.18);border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center" onclick="closeDetailModal()">✕</button>
     <div class="d-mh-top">
-      ${region?`<span class="d-region" style="color:${color}">● ${region}</span>`:''}
+      <span class="d-region" style="color:${color}">● ${uni}</span>
       <span class="d-code">${code}</span>
     </div>
-    ${org?`<div class="d-inst">${org}</div>`:''}
     <div class="d-title">${c?.name||code}</div>
     ${fields.length?`<div class="d-ftags">${fields.map(f=>`<span class="d-ftag">${f}</span>`).join('')}</div>`:''}
     ${chips?`<div class="d-chips">${chips}</div>`:''}
   `;
 
+  // ── 학점 인정 강조 박스 ──
+  const creditHtml = d.creditRecognition
+    ? `<div class="d-credit-box"><div class="d-credit-title">🎓 대학 학점 인정</div><div class="d-credit-text">${d.creditRecognition}</div></div>`
+    : '';
+
   // ── 좌석 현황 ──
   let seatsHtml = '';
   if (c) {
-    if (!c.is_registerable) seatsHtml = `<div class="d-seats-row" style="color:var(--g400)">⚠️ 보령시 소재 학교 별도 모집 강좌입니다</div>`;
-    else if (c.is_full)     seatsHtml = `<div class="d-seats-row" style="color:var(--red)">🔴 마감되었습니다</div>`;
-    else                    seatsHtml = `<div class="d-seats-row" style="color:var(--mint)">🟢 잔여 ${c.remaining}석 · 정원 ${c.capacity}석</div>`;
+    if (c.is_full) seatsHtml = `<div class="d-seats-row" style="color:var(--red)">🔴 마감되었습니다</div>`;
+    else           seatsHtml = `<div class="d-seats-row" style="color:var(--mint)">🟢 잔여 ${c.remaining}석 · 정원 ${c.capacity}석</div>`;
   }
 
   // ── 신청 버튼 ──
   let btnDisabled = false, btnTxt = '신청하기';
-  if (!c||!c.is_registerable){btnTxt='신청 불가 (별도 모집)';btnDisabled=true;}
-  else if(c.is_full)          {btnTxt='마감되었습니다';btnDisabled=true;}
-  else if(!isOpen)            {btnTxt='신청 기간이 아닙니다';btnDisabled=true;}
+  if (!c)              {btnTxt='신청 불가';btnDisabled=true;}
+  else if(c.is_full)   {btnTxt='마감되었습니다';btnDisabled=true;}
+  else if(!isOpen)     {btnTxt='신청 기간이 아닙니다';btnDisabled=true;}
 
   // ── 기본 정보 그리드 ──
-  const periodStr = (e.start && e.end)
-    ? `${e.start.slice(5).replace('-','/')} ~ ${e.end.slice(5).replace('-','/')}`
+  const periodStr = (d.startDate && d.endDate)
+    ? `${d.startDate.slice(5).replace('-','/')} ~ ${d.endDate.slice(5).replace('-','/')}`
     : d.period;
   const infoRows = [
     ['수업 장소', d.place,        true],
     ['운영 기간', periodStr,      false],
-    ...(e.schedule_str?[['수업 요일/시간', e.schedule_str, false]]:[]),
+    ['수업 일정', d.period,       false],
     ['수업 방식', d.method,       false],
     ['운영 대상', d.target,       false],
-    ...(d.supply && d.supply.toLowerCase().trim() !== 'x' && d.supply.trim() !== ''
-        ?[['준비물/복장', d.supply, true]]:[] ),
+    ...(d.supply && d.supply.trim() !== '' ? [['준비물/복장', d.supply, true]] : []),
   ];
   const infoHtml = `<div class="d-igrid">${
     infoRows.filter(([,v])=>v).map(([lbl,val,full])=>
@@ -1178,37 +1157,75 @@ function openDetailModal(code) {
     ).join('')
   }</div>`;
 
-  // ── 수업 일정 ──
-  const schedHtml = e.schedule?.length
-    ? `<div class="d-stitle">📆 수업 일정 (언제 가야 하나요?)</div>${buildScheduleHTML(e.schedule)}`
-    : '';
+  // ── 날짜별 수업 일정 (scheduleByDay) ──
+  let schedHtml = '';
+  if (d.scheduleByDay?.length) {
+    const WD = {'월':'','화':'','수':'','목':'','금':'','토':'sat','일':'sun'};
+    const rows = d.scheduleByDay.map(s => `<tr>
+      <td style="text-align:center"><div class="d-day-badge ${WD[s.weekday]||''}">${s.weekday}</div></td>
+      <td><strong>${s.date.slice(5).replace('-','/')}</strong></td>
+      <td>${s.start} ~ ${s.end}</td>
+      <td style="text-align:center"><span class="d-sess-cnt">${s.sessionCount}차시</span></td>
+    </tr>`).join('');
+    const total = d.scheduleByDay.reduce((a, s) => a + s.sessionCount, 0);
+    schedHtml = `<div class="d-stitle">📆 수업 일정</div>
+    <div style="overflow-x:auto"><table class="d-sched-table">
+      <thead><tr><th style="width:36px">요일</th><th style="width:64px">날짜</th><th>수업 시간</th><th style="width:72px">차시</th></tr></thead>
+      <tbody>${rows}
+        <tr class="d-total-row"><td colspan="3" style="text-align:right;padding-right:12px">총 수업일수</td>
+          <td style="text-align:center"><span class="d-sess-cnt">${d.scheduleByDay.length}일 / ${total}차시</span></td></tr>
+      </tbody></table></div>`;
+  }
 
   // ── 학습 목표 ──
-  const goalHtml = (e.goal1 || e.goal2)
-    ? `<div class="d-stitle">🎯 학습 목표</div>
-       ${e.goal1?`<div class="d-goal">${e.goal1}</div>`:''}
-       ${e.goal2?`<div class="d-goal d-goal-gold">${e.goal2}</div>`:''}`
-    : '';
+  let goalHtml = '';
+  if (d.learningGoals?.length) {
+    goalHtml = `<div class="d-stitle">🎯 학습 목표</div>` +
+      d.learningGoals.map((g, i) => `<div class="d-goal${i>0?' d-goal-gold':''}">${g}</div>`).join('');
+  }
 
   // ── 추천 대상 ──
-  const recHtml = e.recommend
-    ? `<div class="d-stitle">🙋 추천 대상</div><div class="d-recommend">${e.recommend}</div>`
+  const recHtml = d.recommendedFor
+    ? `<div class="d-stitle">🙋 추천 대상</div><div class="d-recommend">${d.recommendedFor}</div>`
     : '';
 
   // ── 강사 소개 ──
   let instrHtml = '';
-  if (e.instructors?.length) {
-    const cards = e.instructors.map(i => `
+  if (d.instructors?.length) {
+    const cards = d.instructors.map(i => `
       <div class="d-instr-card">
         <div class="d-instr-name">👩‍🏫 ${i.name}</div>
-        <div class="d-instr-org">${i.org}${i.major?' · '+i.major:''}</div>
-        ${e.instructor_bio?`<div class="d-instr-bio">${e.instructor_bio}</div>`:''}
+        <div class="d-instr-org">${i.affiliation||''}${i.major?' · '+i.major:''}</div>
+        ${d.instructorBio?`<div class="d-instr-bio">${d.instructorBio}</div>`:''}
       </div>`).join('');
     instrHtml = `<div class="d-stitle">👩‍🏫 강사 소개</div>${cards}`;
   }
 
+  // ── 차시별 수업 계획 (collapsible) ──
+  let sessHtml = '';
+  if (d.sessions?.length) {
+    const sessRows = d.sessions.map(s => `<tr>
+      <td style="text-align:center;white-space:nowrap"><span class="d-sess-cnt">${s.no}차시</span></td>
+      <td style="white-space:nowrap">${s.date ? s.date.slice(5).replace('-','/') : ''}</td>
+      <td style="white-space:nowrap">${s.time||''}</td>
+      <td>${s.content||''}</td>
+      <td style="white-space:nowrap">${s.instructor||''}</td>
+    </tr>`).join('');
+    sessHtml = `
+      <div class="d-stitle">📚 차시별 수업 계획</div>
+      <div class="d-sess-toggle" onclick="this.classList.toggle('open');this.nextElementSibling.classList.toggle('open')">
+        <span>총 ${d.sessions.length}차시 상세 보기</span><span class="arrow">▼</span>
+      </div>
+      <div class="d-sess-content">
+        <div style="overflow-x:auto"><table class="d-sched-table">
+          <thead><tr><th style="width:46px">차시</th><th style="width:56px">날짜</th><th style="width:56px">시간</th><th>내용</th><th style="width:70px">강사</th></tr></thead>
+          <tbody>${sessRows}</tbody></table></div>
+      </div>`;
+  }
+
   // ── 바디 렌더링 ──
   document.getElementById('d-body').innerHTML = `
+    ${creditHtml}
     ${d.intro?`<div class="d-ibox">💡 ${d.intro}</div>`:''}
     <div class="d-stitle">📋 강좌 기본 정보</div>
     ${infoHtml}
@@ -1216,7 +1233,7 @@ function openDetailModal(code) {
     ${goalHtml}
     ${recHtml}
     ${instrHtml}
-    ${e.sessions?.length ? `<div class="d-stitle">📚 차시별 수업 계획</div>${buildSessionsHTML(e.sessions)}` : ''}
+    ${sessHtml}
     ${seatsHtml}
     <button class="btn-primary" id="d-apply-btn" ${btnDisabled?'disabled':''} onclick="applyFromDetail()">${btnTxt}</button>
   `;
